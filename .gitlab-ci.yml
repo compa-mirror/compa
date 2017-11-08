@@ -11,7 +11,7 @@ test_node4:
   stage: test
   script:
     - nvm install 4
-    - npm install && npm run build
+    - npm install
     - npm run test
     - npm run test:root && npm run test:install
     - npm run test:coverage
@@ -20,7 +20,7 @@ test_node5:
   stage: test
   script:
     - nvm install 5
-    - npm install && npm run build
+    - npm install
     - npm run test
     - npm run test:install
     - npm run test:coverage
@@ -29,7 +29,7 @@ test_node6:
   stage: test
   script:
     - nvm install 6
-    - npm install && npm run build
+    - npm install
     - npm run test
     - npm run test:install
     - npm run test:coverage
@@ -38,7 +38,7 @@ test_node7:
   stage: test
   script:
     - nvm install 7
-    - npm install && npm run build
+    - npm install
     - npm run test
     - npm run test:install
     - npm run test:coverage
@@ -47,7 +47,7 @@ test_node8:
   stage: test
   script:
     - nvm install 8
-    - npm install && npm run build
+    - npm install
     - npm run test
     - npm run test:install
     - npm run test:coverage
