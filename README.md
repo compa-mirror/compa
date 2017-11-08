@@ -79,8 +79,7 @@ For a basic setup please see the [Getting Started Guide](https://framagit.org/co
 
 ## Wiki
 
-For more information please check out the [Wiki](https://framagit.org/compa/compa/wikis) and our
-[ReadTheDocs](https://pumpio.readthedocs.io/en/latest/) documentation.
+For more information please check out the [Wiki](https://framagit.org/compa/compa/wikis) documentation.
 
 ## FAQ
 - What mean Compa?

@@ -2,7 +2,7 @@
   "name": "compa",
   "preferGlobal": "true",
   "homepage": "http://joincompa.org/",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "author": "Distopico <distopico@riseup.net>",
   "description": "Compa is a free (as freedom) world wide social directory decentralized and federated with an ActivityPub API.",
   "devDependencies": {
