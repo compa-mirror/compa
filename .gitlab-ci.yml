@@ -13,7 +13,7 @@ test_node4:
     - nvm install 4
     - npm install
     - npm run test
-    - npm run test:root && npm run test:install
+    - npm run test:install
     - npm run test:coverage
 
 test_node5:
