@@ -60,7 +60,8 @@
     "lint": "npm run lint:eslint && npm run lint:json",
     "lint:eslint": "eslint --ext .js src/ public/ test/",
     "lint:deps": "dependency-check -e js package.json src/ bin/ test/ > /dev/null && dependency-check package.json --unused -e js -i dependency-check -i jsonlint -i nyc -i istanbul-combine bin/ src/ test/ > /dev/null",
-    "lint:json": "jsonlint -q package.json compa.json.sample"
+    "lint:json": "jsonlint -q package.json compa.json.sample",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
