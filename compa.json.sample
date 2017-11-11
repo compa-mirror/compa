@@ -1,0 +1,25 @@
+{
+    "instance": {
+        "name": "Awesome Freedom",
+        "maintainer": "Awesome project",
+        "maintainerUrl": "http://example.com/"
+    },
+    "server": {
+        "port":  1204,
+        "hostname":  "compa.example.org",
+        "secret":  "keep it in secret",
+        "logger":  true,
+        "key":  "/etc/my/keyfile.key",
+        "cert":  "/etc/my/server.crt",
+        "dataDir": "/var/local/compa",
+        "enableUploads": true
+    },
+    "database":  {
+        "adapter": "disk",
+        "dir": "/tmp/compa/"
+    },
+    "webClient":  {
+        "enable": true,
+        "debug": false
+    }
+}
