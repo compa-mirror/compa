@@ -1,0 +1,98 @@
+.\" compa.1
+.\"
+.\" compa(1) manual page
+.\"
+.\" Compa -- worldwide social directory decentralized and federated
+.\" Copyright (C) 2017 Compa contributors. See AUTHORS.
+.\" compa.1 is part of Compa.
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU Affero General Public License as
+.\" published by the Free Software Foundation, either version 3 of the
+.\" License, or (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU Affero General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU Affero General Public License
+.\" along with this program.  If not, see <https://www.gnu.org/licenses/>.
+.TH COMPA 1 "08 November 2017" "1.0.0-alpha.0"
+.SH NAME
+Compa \- worldwide social directory decentralized and federated with an ActivityPub API
+.SH SYNOPSIS
+
+.B compa
+[ --config
+.IR config_path
+| -c
+.IR config_path
+]
+[ --\fIconfig_option\fR
+.IR config_value
+]\fI...\fR
+.SH DESCRIPTION
+This is Compa `*/kompa/`. It's a free (as freedom) worldwide social directory decentralized and federated with an ActivityPub API, 
+this is a horizontal community project, anyone can run and participate and contribute, the focus of the project is work for 
+a good user interface, a clean REST API and connecting the people for a better world.
+
+Compa use ActivtyPub as principal protocol and is compatible with Pump.io, Mastodon and other free/open source social networks.
+
+You visited a bookstore, a library and you liked it so much that you would like others to know it, 
+then you can create the site if it does not exist and share it with your friends or family 
+or you are a traveler in search of new beautiful places to visit then **Compa** 
+will be your travel guide based on sites that people have already rehared and valued.
+
+You can share any place like museums, natural park, libraries etc.
+I post something and my followers see it. That's the rough idea behind
+the compa.
+
+There's an API defined in the
+.B API.md
+file in the source. 
+.SH OPTIONS
+.TP
+.BR --config ", " -c
+Path to JSON config file. Default is
+.B /etc/compa.json
+or
+.B ~/.compa.json
+.TP
+.BR --help ", " -h
+Print help text and exit
+.TP
+.BR --version ", " -v
+Print version information and exit
+.PP
+You can also pass configuration values as arguments starting with
+.B --
+- for example,
+\fBcompa.json\fR's
+.B port
+value can be set by passing
+\fB--port\fR.
+Camelcasing like
+
+.SH BUGS
+Bugs are tracked in GitLab:
+.I https://framagit.org/compa/compa/issues
+\.
+.SH AUTHOR
+Enhanced and maintained by many contributors, See AUTHORS in source code.
+.SH COPYRIGHT
+Compa -- worldwide social directory decentralized and federated
+Copyright \(co 2017 Compa contributors. See AUTHORS.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.

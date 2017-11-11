@@ -47,5 +47,8 @@ node_modules
 .yarn-integrity
 
 # Compa stuff
-
-config.js
+config.json
+compa.json
+bin/
+server/
+build/

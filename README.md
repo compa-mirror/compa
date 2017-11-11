@@ -1,6 +1,6 @@
 # ![Compa](https://framagit.org/compa/compa/raw/master/public/images/logo.png)
 
-[![license AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-663366.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![license AGPL v3](https://img.shields.io/badge/license-AGPL%20v3-663366.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![build status](https://framagit.org/compa/compa/badges/master/pipeline.svg)](https://framagit.org/compa/compa/commits/master)
 [![coverage status](https://framagit.org/compa/compa/badges/master/coverage.svg)](https://framagit.org/compa/compa/commits/master)
 [![npm](https://img.shields.io/npm/v/compa.svg)](https://npmjs.com/package/compa)
