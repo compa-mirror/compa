@@ -33,5 +33,4 @@ const compa = () => {
         .argv;
 };
 
-
 module.exports = compa;
