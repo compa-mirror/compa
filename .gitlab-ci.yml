@@ -1,5 +1,9 @@
 before_script:
   - apt-get update -qq && apt-get install -y -qq graphicsmagick wget sudo
+  - useradd -c 'Node user' -m -d /home/node -s /bin/bash node
+  - echo "node ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/node
+  - chmod 0440 /etc/sudoers.d/node
+  - su node
   - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
   - export NVM_DIR="$HOME/.nvm"
   - . "$NVM_DIR/nvm.sh"
@@ -20,7 +24,7 @@ test_node5:
   stage: test
   script:
     - nvm install 5
-    - npm install
+    - npm install --unsafe-perm
     - npm run test
     - npm run test:install
     - npm run test:coverage

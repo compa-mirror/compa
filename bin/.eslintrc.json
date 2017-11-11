@@ -1,0 +1,6 @@
+{
+  "rules": {
+    "node/no-unsupported-features": ["error", {"version": 4}],
+    "node/no-unpublished-require": ["off"]
+  }
+}

@@ -1,4 +1,5 @@
 {
+  "root": true,
   "env": {
     "commonjs": true,
     "es6": true,
@@ -78,7 +79,8 @@
     "space-in-parens": ["error", "never"],
     "space-infix-ops": ["error", {"int32Hint": false}],
     "spaced-comment": ["error", "always"],
+    "valid-jsdoc": ["error"],
     "node/exports-style": ["error", "module.exports"],
-    "valid-jsdoc": ["error"]
+    "node/no-unsupported-features": ["error", {"version": 8}]
   }
 }

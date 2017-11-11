@@ -1,6 +1,10 @@
+# All dot files
+.*
+
 # Logs
 logs
 *.log
+*~
 npm-debug.log*
 
 # Runtime data
@@ -19,36 +23,17 @@ coverage-root
 # nyc test coverage
 .nyc_output
 
-# Grunt intermediate storage
-.grunt
-
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons
-build/Release
-
 # Dependency directories
 node_modules
 
 # Optional npm cache directory
 .npm
 
-# Optional eslint cache
-.eslintcache
-
-# Optional REPL history
-.node_repl_history
-
 # Output of 'npm pack'
 *.tgz
-
-# Yarn Integrity file
-.yarn-integrity
 
 # Compa stuff
 config.json
 compa.json
-bin/lib
-server/
+src/
 build/
