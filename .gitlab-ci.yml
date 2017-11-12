@@ -1,13 +1,11 @@
-variables:
-  # Prevent error: 'apt-utils is not installed'
-  DEBIAN_FRONTEND: "teletype"
-
 before_script:
+  - export DEBIAN_FRONTEND="teletype" # Prevent error: 'apt-utils is not installed'
   - apt-get update -qq && apt-get install -y -qq graphicsmagick wget sudo
   - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
   - export NVM_DIR="$HOME/.nvm"
   - . "$NVM_DIR/nvm.sh"
-  - npm config set "unsafe-perm" "true"
+  - touch $HOME/.npmrc
+  - echo "unsafe-perm=true" > $HOME/.npmrc
 
 stages:
 - test
