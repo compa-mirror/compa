@@ -12,6 +12,7 @@
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
+    "eqeqeq": ["error", "always"],
     "array-bracket-newline": ["error", "consistent"],
     "array-bracket-spacing": ["error", "never"],
     "block-spacing": ["error"],
@@ -54,9 +55,14 @@
     "no-useless-return": ["error"],
     "wrap-iife": ["error", "inside"],
     "yoda": ["error"],
+    "max-nested-callbacks": ["error", 3],
+    "max-params": ["error", 5],
+    "max-depth": ["error", 5],
+    "max-len": ["error", 120, { "ignoreTrailingComments": true, "ignoreTemplateLiterals": true, "ignoreRegExpLiterals": true}],
     "prefer-const": ["error"],
-    "prefer-arrow-callback": ["error"],
+    "prefer-arrow-callback": ["error", {"allowNamedFunctions": true}],
     "prefer-template": ["error"],
+    "prefer-rest-params": ["error"],
     "arrow-body-style": ["error", "always"],
     "arrow-parens": ["error", "always"],
     "arrow-spacing": ["error"],
@@ -78,8 +84,29 @@
     "space-before-blocks": ["error", "always"],
     "space-in-parens": ["error", "never"],
     "space-infix-ops": ["error", {"int32Hint": false}],
+    "require-jsdoc": ["error", {
+      "require": {
+        "FunctionDeclaration": true,
+        "MethodDefinition": true,
+        "ClassDeclaration": true,
+        "ArrowFunctionExpression": true,
+        "FunctionExpression": true
+      }
+    }],
     "spaced-comment": ["error", "always"],
-    "valid-jsdoc": ["error"],
+    "valid-jsdoc": ["error", {
+      "requireReturn": false,
+      "requireReturnType": true,
+      "requireReturnDescription": false,
+      "matchDescription": ".+",
+      "requireParamDescription": true,
+      "prefer": {
+        "arg": "param", "argument": "param", "params": "param", "class": "constructor", "return": "returns", "virtual": "abstract"
+      },
+      "preferType": {
+        "Boolean": "boolean", "Number": "number", "Object": "object", "String": "string", "promise": "Promise"
+      }
+    }],
     "node/exports-style": ["error", "module.exports"],
     "node/no-unsupported-features": ["error", {"version": 8}]
   }
