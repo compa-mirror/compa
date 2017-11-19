@@ -20,7 +20,7 @@
 
 "use strict";
 
-const console = require("better-console");
+const print = require("better-console");
 
 let cliCompa;
 
@@ -28,8 +28,8 @@ let cliCompa;
 try {
     cliCompa = require("./lib/cli");
 } catch (err) {
-    if (err instanceof Error && err.code === "MODULE_NOT_FOUND") {
-        console.warn("Look like that it is not compiled yet, please run: 'npm run build'");
+    if (err instanceof Error && err.code === "MODULE_NOT_FOUND" && err.message.indexOf("lib/cli") !== -1) {
+        print.warn("Look like that it is not compiled yet, please run: 'npm run build'");
     } else {
         throw err;
     }

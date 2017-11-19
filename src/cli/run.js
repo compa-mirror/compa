@@ -23,11 +23,21 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const _ = require("lodash");
+const print = require("./print");
 const Promise = require("bluebird");
-const console = require("better-console");
+const CompaServer  = require("../../server/compa");
+const { defaults }  = require("../../server/helpers");
 
+/**
+ * CLI command for run/start Compa server.
+ * @module cli/run
+ */
 class Run {
 
+    /**
+     * Set required properties for 'yargs' command.
+     * @constructor
+     */
     constructor() {
         this.command = "run";
         this.describe = "Start compa app";
@@ -37,6 +47,13 @@ class Run {
         this.handler = this.handler.bind(this);
     }
 
+    /**
+     * Setup the command, if no pass `-c` option the default configurations
+     * files will be ["/etc/compa.json" and "~/.compa.json"],
+     * all parameters can be set in the environment variable 'COMPA_'.
+     * @param {Yags} argv - instance of 'Yags' for setup command
+     * @returns {Yags} command instance extended
+     */
     builder(argv) {
         const defaultConfig = ["/etc/compa.json"];
 
@@ -54,19 +71,36 @@ class Run {
         return argv;
     }
 
+    /**
+     * When the command is called get configuration and run compa server.
+     * @param {object} argv - parameters already parse
+     */
     handler(argv) {
 
         if (argv.config) {
-            this.getConfig(argv.config).then((config) => {
-                argv = _.extend(config, argv);
+            this.getConfig(argv.config).then((configData) => {
+                let config = _.cloneDeep(configData);
+                config = _.defaultsDeep(config, defaults);
+
+                const server = new CompaServer(config);
+
+                return server.create().then(() => {
+                    print.info("Compa server runs successfully");
+                });
 
             }).catch((err) => {
-                console.error(_.has(err, "message") ? err.message : err);
+                print.error(err);
                 process.exitCode = 1;
             });
         }
     }
 
+    /**
+     * Get and parse configuration file/files from JSON.
+     * @param {(string|string[])} filename - full path of file will parsed
+     * @returns {Promise} on success run configuration object
+     * @throws {Error} will throw an error if the JSON is invalid
+     */
     getConfig(filename) {
         const config = {};
         const errors = [];
@@ -86,8 +120,8 @@ class Run {
                         errors.push(err.message);
                     }
 
-                    if (files.length == errors.length) {
-                        reject(errors.join(os.EOL));
+                    if (files.length === errors.length) {
+                        reject(new Error(errors.join(os.EOL)));
                     } else {
                         resolve(raw || null);
                     }
@@ -98,8 +132,11 @@ class Run {
             return promise;
         }).then((filesRaw) => {
 
+            // Remove null for get last available file
             _.remove(filesRaw, _.isNull);
+
             return filesRaw;
+
         }).all().then((raw) => {
 
             try {

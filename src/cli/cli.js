@@ -22,6 +22,10 @@
 const yargs = require("yargs");
 const runCompa = require("./run");
 
+/**
+ * Setup Compa CLI with default parameters and command by modules
+ * @returns {object} CLI parameter parse by command
+ */
 const compa = () => {
     return yargs.usage("Usage: $0 [command] <options>")
         .command(runCompa)
