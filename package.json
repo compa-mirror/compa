@@ -1,10 +1,20 @@
 {
   "name": "compa",
-  "preferGlobal": "true",
   "homepage": "http://joincompa.org/",
   "version": "1.0.0-alpha.4",
+  "license": "AGPL-3.0",
   "author": "Distopico <distopico@riseup.net>",
   "description": "Compa is a free (as freedom) world wide social directory decentralized and federated with an ActivityPub API.",
+  "preferGlobal": "true",
+  "repository": {
+    "type": "git",
+    "url": "https://framagit.org/compa/compa.git"
+  },
+  "bugs": "https://framagit.org/compa/compa/issues",
+  "engines": {
+    "node": ">=4 <=8",
+    "npm": ">=2"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -12,7 +22,6 @@
     "dependency-check": "^2.8.0",
     "eslint": "^4.10.0",
     "eslint-plugin-node": "^5.2.1",
-    "install": "^0.10.1",
     "istanbul-combine": "^0.3.0",
     "jsonlint": "^1.6.2",
     "nyc": "^11.3.0",
@@ -25,18 +34,27 @@
     "bluebird": "^3.5.1",
     "body-parser": "^1.15.2",
     "bunyan": "^1.8.12",
+    "connect-waterline": "^0.1.0",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.0",
     "express-session": "^1.14.1",
+    "file-stream-rotator": "^0.2.0",
     "gm": "^1.22.0",
     "helmet": "^3.3.0",
+    "html-to-text": "^3.3.0",
+    "juice": "^4.2.2",
     "lodash": "^4.17.4",
     "method-override": "^2.3.6",
+    "nodemailer": "^2.7.2",
     "serve-favicon": "^2.3.0",
     "showdown": "^1.4.1",
+    "ssl-config": "^1.0.0",
     "ua-parser-js": "^0.7.10",
     "uuid": "^3.0.0",
     "validator": "^9.0.0",
+    "vue": "^2.5.3",
+    "vue-server-renderer": "^2.5.3",
+    "waterline": "^0.13.1-8",
     "yargs": "^9.0.1"
   },
   "bin": {
@@ -63,11 +81,6 @@
     "lint:json": "jsonlint -q package.json compa.json.sample",
     "prepublish": "npm run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://framagit.org/compa/compa.git"
-  },
-  "bugs": "https://framagit.org/compa/compa/issues",
   "keywords": [
     "activitystreams",
     "activitypub",
@@ -81,11 +94,6 @@
     "app",
     "server"
   ],
-  "license": "AGPL-3.0",
-  "engines": {
-    "node": ">=4 <=8",
-    "npm": ">=2"
-  },
   "greenkeeper": {
     "ignore": []
   }

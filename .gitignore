@@ -52,4 +52,4 @@ compa.json
 bin/lib
 server/
 build/
-src/*
+!src/*
