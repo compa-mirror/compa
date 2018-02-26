@@ -48,19 +48,15 @@ class CompaServer {
      */
     create() {
         const confServer = this.config.server;
-        const port = confServer.port;
-        const hostname = confServer.hostname;
+        const { port, hostname, key: isHTTPS } = confServer;
         const address = confServer.address || hostname;
-        const isHTTPS = confServer.key;
 
         return new Promise((resolve, reject) => {
 
-            if (process.getuid) {
-                if (port < 1024 && process.getuid() !== 0) {
-                    return reject(new Error(
-                        "Can't listen ports lower than 1024 on POSIX systems unless you're root"
-                    ));
-                }
+            if (process.getuid && port < 1024 && process.getuid() !== 0) {
+                return reject(new Error(
+                    "Can't listen ports lower than 1024 on POSIX systems unless you're root"
+                ));
             }
 
             resolve();
@@ -78,7 +74,7 @@ class CompaServer {
                 const key = readFile(confServer.key);
                 const cert = readFile(confServer.cert);
 
-                return [key, cert];
+                return [ key, cert ];
             }
 
             return [];

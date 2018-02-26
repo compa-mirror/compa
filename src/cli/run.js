@@ -55,7 +55,7 @@ class Run {
      * @returns {Yags} command instance extended
      */
     builder(argv) {
-        const defaultConfig = ["/etc/compa.json"];
+        const defaultConfig = [ "/etc/compa.json" ];
 
         if (process.env.HOME) {
             defaultConfig.push(path.join(process.env.HOME, ".compa.json"));
@@ -66,7 +66,7 @@ class Run {
             .default("c", defaultConfig, "/etc/compa.json or ~/.compa.json")
             .string("c")
             .env("COMPA")
-            .number(["port"]);
+            .number([ "port" ]);
 
         return argv;
     }
@@ -109,7 +109,7 @@ class Run {
         if (_.isArray(filename)) {
             files = filename;
         } else {
-            files = [filename];
+            files = [ filename ];
         }
 
         return Promise.map(files, (file) => {

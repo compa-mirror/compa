@@ -6,6 +6,11 @@
             }
         }]
     ],
+    "env": {
+        "test": {
+            "plugins": ["istanbul"]
+        }
+    },
     "plugins": [
         ["transform-runtime", {"polyfill": false}]
     ]

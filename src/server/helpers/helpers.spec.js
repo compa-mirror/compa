@@ -1,8 +1,8 @@
-// Helper module for Compa
+// Unit test for helpers module
 //
 // Compa -- worldwide social directory decentralized and federated
-// Copyright (C) 2017 Distopico <distopico@riseup.net>
-// index.js is part of Compa.
+// Copyright (C) 2018 Distopico <distopico@riseup.net>
+// helpers/helpers.spec.js is part of Compa.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -19,18 +19,12 @@
 
 "use strict";
 
-const defaults = require("./defaults");
-const logger = require("./logger");
-const mailer = require("./mailer");
+const { expect } = require("chai");
+const helpers = require("./");
 
-/**
- * All available utilities for helpers module
- * @module helpers
- */
-const helpers = {
-    defaults,
-    logger,
-    mailer
-};
+describe("Test for compa helpers", () => {
 
-module.exports = helpers;
+    it("should return the helpers", () => {
+        expect(helpers).to.be.an("object");
+    });
+});

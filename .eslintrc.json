@@ -53,6 +53,9 @@
     "no-empty-function": ["error"],
     "no-else-return": ["error"],
     "no-useless-return": ["error"],
+    "no-useless-computed-key": ["error"],
+    "no-useless-constructor": ["error"],
+    "no-useless-rename": ["error"],
     "wrap-iife": ["error", "inside"],
     "yoda": ["error"],
     "max-nested-callbacks": ["error", 3],
@@ -63,15 +66,25 @@
     "prefer-arrow-callback": ["error", {"allowNamedFunctions": true}],
     "prefer-template": ["error"],
     "prefer-rest-params": ["error"],
+    "prefer-destructuring": ["error", {
+      "array": true,
+      "object": true
+    }],
+    "prefer-arrow-callback": ["error"],
+    "prefer-spread": ["error"],
+    "spaced-comment": ["error", "always"],
+    "space-unary-ops": ["error"],
+    "space-infix-ops": ["error"],
     "arrow-body-style": ["error", "always"],
     "arrow-parens": ["error", "always"],
     "arrow-spacing": ["error"],
     "generator-star-spacing": ["error"],
     "no-confusing-arrow": ["error"],
+    "no-unused-expressions": ["error"],
     "no-useless-constructor": ["error"],
     "no-useless-rename": ["error"],
     "no-whitespace-before-property": ["error"],
-    "object-shorthand": ["error", "never"],
+    "object-shorthand": ["error", "consistent-as-needed"],
     "rest-spread-spacing": ["error", "never"],
     "template-curly-spacing": ["error", "never"],
     "handle-callback-err": ["error"],
@@ -82,8 +95,10 @@
     "callback-return": ["warn"],
     "space-before-function-paren": ["error", "never"],
     "space-before-blocks": ["error", "always"],
+    "array-bracket-spacing": ["error", "always"],
     "space-in-parens": ["error", "never"],
     "space-infix-ops": ["error", {"int32Hint": false}],
+    "object-curly-spacing": ["error", "always"],
     "require-jsdoc": ["error", {
       "require": {
         "FunctionDeclaration": true,
@@ -93,7 +108,6 @@
         "FunctionExpression": true
       }
     }],
-    "spaced-comment": ["error", "always"],
     "valid-jsdoc": ["error", {
       "requireReturn": false,
       "requireReturnType": true,
@@ -109,5 +123,15 @@
     }],
     "node/exports-style": ["error", "module.exports"],
     "node/no-unsupported-features": ["error", {"version": 8}]
-  }
+  },
+  "overrides": [
+    {
+      "files": [ "src/**/*.spec.js"],
+      "env": {
+        "es6": true,
+        "node": true,
+        "mocha": true
+      }
+    }
+  ]
 }

@@ -64,21 +64,21 @@ class Logger {
                 data: (data) => {
                     if (data) {
                         // Remove private data
-                        return _.omit(data, ["password"]);
+                        return _.omit(data, [ "password" ]);
                     }
                 },
                 user: (user) => {
                     if (user) {
-                        return {id: user.id, type: user.type};
+                        return { id: user.id, type: user.type };
                     }
-                    return {id: "<none>"};
+                    return { id: "<none>" };
 
                 },
                 customer: (customer) => {
                     if (customer) {
-                        return {token: customer.token, name: customer.name || "<none>"};
+                        return { token: customer.token, name: customer.name || "<none>" };
                     }
-                    return {token: "<none>", name: "<none>"};
+                    return { token: "<none>", name: "<none>" };
 
                 }
             }
@@ -109,10 +109,8 @@ class Logger {
             error: "fatal",
             fatal: "fatal"
         };
-        const config = options.config || {};
-        const ringBuffer = options.ringBuffer;
-        const logName = options.logName || "server";
-        let loggerLevel = config.loggerLevel || "info";
+        const { ringBuffer, config = {}, logName = "server" } = options;
+        let { loggerLevel = "info" } = options;
         let fileName = `compa-${logName}`;
         let logStream = [];
         let alertsEmails = null;
@@ -128,14 +126,14 @@ class Logger {
 
         // Check stream type
         if (!type) {
-            logStream = [{path: "/dev/null"}];
+            logStream = [ { path: "/dev/null" } ];
         } else if (type === "file") {
-            logStream =  [{
+            logStream =  [ {
                 path: `${fileName}.log`
             }, {
                 level: errorLevel[loggerLevel] || "warn",
                 path: `${fileName}.error.log`
-            }];
+            } ];
         } else if (type === "rotate") {
             const rotateConf = {
                 frequency: "custom",
@@ -143,7 +141,7 @@ class Logger {
                 verbose: false
             };
 
-            logStream = [{
+            logStream = [ {
                 stream: fileStreamRotator.getStream(_.extend({
                     filename: `${fileName}.%DATE%.log`
                 }, rotateConf))
@@ -152,9 +150,9 @@ class Logger {
                 stream: fileStreamRotator.getStream(_.extend({
                     filename: `${fileName}.%DATE%.error.log`
                 }, rotateConf))
-            }];
+            } ];
         } else if (type === "stream") {
-            logStream = [{stream: process.stderr}];
+            logStream = [ { stream: process.stderr } ];
         }
 
         // Log level for primary stream
@@ -206,7 +204,7 @@ class Logger {
      * @throws {Error} when is `rotate/file` and 'loggerDir' is not string
      */
     setup(config) {
-        let streamType = ["stream", "file", "rotate"];
+        let streamType = [ "stream", "file", "rotate" ];
         const logConfig = _.clone(this.logConfig, true);
         const logType = {
             access: _.clone(logConfig, true), // Access log for express middleware
@@ -248,7 +246,7 @@ class Logger {
         }).then((servConfig) => {
             // Ring buffer for email stream notifications
             if (servConfig.logger !== false) {
-                this.ringBuffer = new bunyan.RingBuffer({limit: 10});
+                this.ringBuffer = new bunyan.RingBuffer({ limit: 10 });
             }
 
             // Set config by logType
@@ -294,8 +292,8 @@ class Logger {
      */
     accessLogger() {
         return (req, res, next) => {
-            const end = res.end;
-            const weblog = this.weblog.child({"req_id": uuid.v4(), component: "web"});
+            const { end } = res;
+            const weblog = this.weblog.child({ "req_id": uuid.v4(), component: "web" });
             const startTime = Date.now();
 
             req.log = weblog;
@@ -304,7 +302,7 @@ class Logger {
 
                 res.end = end;
                 res.end(chunk, encoding);
-                info = {req: req, res: res, serverTime: Date.now() - startTime};
+                info = { req: req, res: res, serverTime: Date.now() - startTime };
 
                 if (_.has(req, "user")) {
                     info.user = req.user;
@@ -325,14 +323,14 @@ class Logger {
     socketLogger() {
         return (io, next) => {
             const startTime = Date.now();
-            const socketlog = this.socketlog.child({"req_id": uuid.v4(), component: "socket"});
+            const socketlog = this.socketlog.child({ "req_id": uuid.v4(), component: "socket" });
             const req = io.request;
-            const res = req.res;
+            const { res } = req;
             let info = {};
 
             io.log = this.log;
             req.log = socketlog;
-            info = {req: req, res: res, serverTime: Date.now() - startTime};
+            info = { req: req, res: res, serverTime: Date.now() - startTime };
             socketlog.info(info);
             next();
         };

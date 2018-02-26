@@ -55,7 +55,7 @@ const logError = (method, args) => {
 
         // Show error stack only in debug mode
         if (isDebug && _.has(value, "stack")) {
-            stack = value.stack;
+            ({ stack } = value);
         }
     }
 

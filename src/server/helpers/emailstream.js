@@ -55,7 +55,7 @@ class EmailStream {
         }, config);
 
         if (_.isString(config.to)) {
-            this.config.to = [config.to];
+            this.config.to = [ config.to ];
         }
 
         this.writable = true;
@@ -68,7 +68,7 @@ class EmailStream {
      * @param {object} log - an object data with information as level/hostname/msg etc
      */
     write(log) {
-        const config = this.config;
+        const { config } = this;
 
         if (config.to && config.to.length && log.component !== "mail") {
 

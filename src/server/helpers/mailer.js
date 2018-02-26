@@ -26,7 +26,7 @@ const juice = require("juice");
 const htmlToText = require("html-to-text");
 const Promise = require("bluebird");
 const Vue = require("vue");
-const {createRenderer} = require("vue-server-renderer");
+const { createRenderer } = require("vue-server-renderer");
 const nodemailer = require("nodemailer");
 
 /**
@@ -117,7 +117,7 @@ class Mailer {
             this.templatesPath = templatesPath;
 
             // Mailer options and instance
-            this.log = log.child({component: "mail"});
+            this.log = log.child({ component: "mail" });
             this.from = mailConfig.from || `no-reply@${hostname}`;
             this.subject = config.instance.name;
             this.templateOpt = config.templateOpt || {};
@@ -160,7 +160,7 @@ class Mailer {
             );
         }
 
-        const {toTextOpts, toStyle} = this.templateOpt;
+        const { toTextOpts, toStyle } = this.templateOpt;
         const viewDir = path.join(this.templatesPath, view);
         const tplIgnore = [];
         const tplType = {
@@ -277,17 +277,17 @@ class Mailer {
             from: this.from
         }, options);
 
-        locals = _.extend({}, locals, _.pick(options, ["from", "to"]));
+        locals = _.extend({}, locals, _.pick(options, [ "from", "to" ]));
 
         // Allow multiples emails
         if (!_.isArray(locals.to)) {
-            locals.to = [locals.to];
+            locals.to = [ locals.to ];
         }
 
         // Fallback origin as destination (for alerts and debug)
         _.remove(locals.to, _.isUndefined);
         if (_.isEmpty(locals.to)) {
-            locals.to = [this.from];
+            locals.to = [ this.from ];
         }
 
         // Render template
