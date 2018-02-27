@@ -126,11 +126,23 @@
   },
   "overrides": [
     {
-      "files": [ "src/**/*.spec.js"],
+      "files": ["src/**/*.spec.js", "test/**/*.js"],
       "env": {
         "es6": true,
         "node": true,
         "mocha": true
+      },
+      "settings": {
+        "node": {
+          "allowModules": ["chai", "chai-as-promised"]
+        }
+      },
+      "globals": {
+        "expect": true
+      },
+      "rules": {
+        "max-nested-callbacks": ["error", 5],
+        "no-console": ["warn"]
       }
     }
   ]

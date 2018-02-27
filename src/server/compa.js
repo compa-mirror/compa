@@ -98,7 +98,7 @@ class CompaServer {
             return Promise.fromCallback((callback) => {
                 appServer.listen(port, address, () => {
                     this.log.info("Listening Compa on %s:%s", address, port);
-                    callback(null, this.app);
+                    callback(null, { server: appServer, app: this.app });
                 });
             });
         });

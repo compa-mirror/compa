@@ -19,12 +19,76 @@
 
 "use strict";
 
-const { expect } = require("chai");
+const _ = require("lodash");
+const Server = require("../compa");
+const defaults = require("./defaults");
 const helpers = require("./");
+
+let mockConfig = _.cloneDeep(defaults);
+let appServer = {};
 
 describe("Test for compa helpers", () => {
 
     it("should return the helpers", () => {
         expect(helpers).to.be.an("object");
+    });
+});
+
+describe("Logger helper", () => {
+
+    afterEach(() => {
+        mockConfig = _.cloneDeep(defaults);
+    });
+
+    it("should reject with error on setup with empty configuration", () => {
+        const { logger } = helpers;
+
+        return expect(logger.setup()).to.be.rejectedWith(Error);
+    });
+
+    it("should have empty ring buffer when logger option is false", (done) => {
+        const { logger } = helpers;
+        mockConfig.server.logger = false;
+
+        logger.setup(mockConfig).then((log) => {
+            expect(log).nested.include({ "fields.name": "compa-server" });
+            expect(logger.records()).to.be.an("undefined");
+            done();
+        }).catch(done);
+    });
+
+    describe("Logger helper with server runing", () => {
+        before(() => {
+            const compa = new Server(mockConfig);
+
+            return compa.create().then((instance) => {
+                appServer  = instance.server;
+                return instance;
+            });
+        });
+
+        after((done) => {
+            if (appServer.close) {
+                appServer.close(done);
+            } else {
+                done();
+            }
+        });
+
+        it("should return the logger by type", () => {
+            const { logger } = helpers;
+            const log = logger.get("access");
+
+            expect(log).to.be.an("object");
+            expect(log).to.nested.include({ "fields.name": "compa-access" });
+        });
+
+        it("should return the default logger type", () => {
+            const { logger } = helpers;
+            const log = logger.get();
+
+            expect(log).to.be.an("object");
+            expect(log).to.nested.include({ "fields.name": "compa-server" });
+        });
     });
 });

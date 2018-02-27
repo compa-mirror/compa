@@ -224,7 +224,7 @@ class Logger {
 
         }).then((servConfig) => {
             // Set log type
-            streamType = servConfig.logger === false ? false : streamType[config.loggerType] || "stream";
+            streamType = servConfig.logger !== false ? streamType[config.loggerType] || "stream" : false;
 
             if (streamType === "file" || streamType === "rotate") {
                 if (!_.isString(servConfig.loggerDir)) {
