@@ -27,7 +27,7 @@ const cluster = require("cluster");
 const uuid = require("uuid");
 const bunyan = require("bunyan");
 const fileStreamRotator = require("file-stream-rotator");
-const emailStream = require("./emailstream");
+const emailStream = require("../mailer/emailstream");
 
 //  Private methods
 const getLoggerStreams = Symbol("getLoggerStreams");
@@ -159,7 +159,7 @@ class Logger {
         logStream[0].level = loggerLevel;
 
         // RingBuffer for email stream
-        if (ringBuffer) {
+        if (!_.isEmpty(ringBuffer)) {
             logStream.push({
                 level: loggerLevel,
                 type: "raw",
@@ -224,7 +224,9 @@ class Logger {
 
         }).then((servConfig) => {
             // Set log type
-            streamType = servConfig.logger !== false ? streamType[config.loggerType] || "stream" : false;
+            streamType = servConfig.logger !== false ? streamType.find((value) => {
+                return value === servConfig.loggerType;
+            }) || "stream" : false;
 
             if (streamType === "file" || streamType === "rotate") {
                 if (!_.isString(servConfig.loggerDir)) {
