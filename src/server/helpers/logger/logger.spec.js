@@ -20,19 +20,12 @@
 "use strict";
 
 const _ = require("lodash");
-const Server = require("../compa");
-const defaults = require("./defaults");
-const helpers = require("./");
+const Server = require("../../compa");
+const defaults = require("../defaults");
+const logger = require("./");
 
 let mockConfig = _.cloneDeep(defaults);
 let appServer = {};
-
-describe("Test for compa helpers", () => {
-
-    it("should return the helpers", () => {
-        expect(helpers).to.be.an("object");
-    });
-});
 
 describe("Logger helper", () => {
 
@@ -40,14 +33,22 @@ describe("Logger helper", () => {
         mockConfig = _.cloneDeep(defaults);
     });
 
-    it("should reject with error on setup with empty configuration", () => {
-        const { logger } = helpers;
+    it("should return the helpers", () => {
+        expect(logger).to.be.an("object");
+    });
 
+    it("should reject with error on setup with empty configuration", () => {
         return expect(logger.setup()).to.be.rejectedWith(Error);
     });
 
+    it("should reject with error with logger type 'file' without 'loggerDir'", () => {
+        mockConfig.server.loggerType = "file";
+        mockConfig.server.loggerDir = null;
+
+        return expect(logger.setup(mockConfig)).to.be.rejectedWith(Error);
+    });
+
     it("should have empty ring buffer when logger option is false", (done) => {
-        const { logger } = helpers;
         mockConfig.server.logger = false;
 
         logger.setup(mockConfig).then((log) => {
@@ -57,7 +58,36 @@ describe("Logger helper", () => {
         }).catch(done);
     });
 
-    describe("Logger helper with server runing", () => {
+    describe("Logger helper disabled with server runing", () => {
+        before(() => {
+            mockConfig.server.logger = false;
+            const compa = new Server(mockConfig);
+
+            return compa.create().then((instance) => {
+                appServer  = instance.server;
+                return instance;
+            });
+        });
+
+        after((done) => {
+            if (appServer.close) {
+                appServer.close(done);
+            } else {
+                done();
+            }
+        });
+
+        it("should return the default logger and empty records", () => {
+            const log = logger.get();
+            const records = logger.records();
+
+            expect(log).to.be.an("object");
+            expect(log).to.nested.include({ "fields.name": "compa-server" });
+            expect(records).to.be.an("undefined");
+        });
+    });
+
+    describe("Logger helper enabled with server runing", () => {
         before(() => {
             const compa = new Server(mockConfig);
 
@@ -76,7 +106,6 @@ describe("Logger helper", () => {
         });
 
         it("should return the logger by type", () => {
-            const { logger } = helpers;
             const log = logger.get("access");
 
             expect(log).to.be.an("object");
@@ -84,7 +113,6 @@ describe("Logger helper", () => {
         });
 
         it("should return the default logger type", () => {
-            const { logger } = helpers;
             const log = logger.get();
 
             expect(log).to.be.an("object");
