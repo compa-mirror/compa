@@ -27,7 +27,7 @@ const cluster = require("cluster");
 const uuid = require("uuid");
 const bunyan = require("bunyan");
 const fileStreamRotator = require("file-stream-rotator");
-const emailStream = require("../mailer/emailstream");
+const EmailStream = require("../mailer/emailstream");
 
 //  Private methods
 const getLoggerStreams = Symbol("getLoggerStreams");
@@ -74,9 +74,9 @@ class Logger {
                     return { id: "<none>" };
 
                 },
-                customer: (customer) => {
-                    if (customer) {
-                        return { token: customer.token, name: customer.name || "<none>" };
+                consumer: (consumer) => {
+                    if (consumer) {
+                        return { token: consumer.token, name: consumer.name || "<none>" };
                     }
                     return { token: "<none>", name: "<none>" };
 
@@ -101,37 +101,35 @@ class Logger {
      * @param {object} options.config - server configuration with logger options, see {@link Logger#setup}
      * @returns {object} logger streams configuration
      */
-    [getLoggerStreams](type, options = {}) {
-        const errorLevel = {
+    [getLoggerStreams](type, options) {
+        const { ringBuffer, config, logName } = options;
+        let { loggerLevel } = config;
+        let fileName = `compa-${logName}`;
+        let logStream = [];
+        let alertsEmails = null;
+        let errorLevel = {
             debug: "warn",
             info: "warn",
             warn: "error",
             error: "fatal",
             fatal: "fatal"
         };
-        const { ringBuffer, config = {}, logName = "server" } = options;
-        let { loggerLevel = "info" } = options;
-        let fileName = `compa-${logName}`;
-        let logStream = [];
-        let alertsEmails = null;
 
         if (_.isString(config.loggerDir)) {
             fileName = path.resolve(config.loggerDir, fileName);
         }
-
         // Convert to level name from number
         if (_.isFinite(loggerLevel)) {
             loggerLevel = bunyan.nameFromLevel[loggerLevel];
         }
+        errorLevel = errorLevel[loggerLevel] || "warn";
 
         // Check stream type
-        if (!type) {
-            logStream = [ { path: "/dev/null" } ];
-        } else if (type === "file") {
+        if (type === "file") {
             logStream =  [ {
                 path: `${fileName}.log`
             }, {
-                level: errorLevel[loggerLevel] || "warn",
+                level: errorLevel,
                 path: `${fileName}.error.log`
             } ];
         } else if (type === "rotate") {
@@ -153,19 +151,13 @@ class Logger {
             } ];
         } else if (type === "stream") {
             logStream = [ { stream: process.stderr } ];
+        } else {
+            logStream = [ { path: "/dev/null" } ];
         }
 
         // Log level for primary stream
         logStream[0].level = loggerLevel;
 
-        // RingBuffer for email stream
-        if (!_.isEmpty(ringBuffer)) {
-            logStream.push({
-                level: loggerLevel,
-                type: "raw",
-                stream: ringBuffer
-            });
-        }
         // Logs alerts to email
         if (config.alerts === true && config.contactEmail) {
             alertsEmails = config.contactEmail;
@@ -173,10 +165,18 @@ class Logger {
             alertsEmails = config.alerts.to;
         }
 
-        if (alertsEmails) {
+        if (alertsEmails && type !== false) {
+            // Ring buffer for email stream notifications
+            this.ringBuffer = new bunyan.RingBuffer({ limit: 10 });
+            logStream.push({
+                level: loggerLevel,
+                type: "raw",
+                stream: ringBuffer
+            });
+
             logStream.push({
                 type: "raw", // You should use with 'raw' type!
-                stream: emailStream({
+                stream: new EmailStream({
                     to: alertsEmails,
                     instanceName: config.name,
                     ringBuffer: ringBuffer,
@@ -238,7 +238,7 @@ class Logger {
                 // Ensure log path exists
                 const access = Promise.promisify(fs.access);
 
-                return access(servConfig.loggerDir, fs.W_OK || fs.constants.W_OK).then(() => {
+                return access(servConfig.loggerDir, fs.W_OK).then(() => {
                     return servConfig;
                 });
             }
@@ -246,11 +246,6 @@ class Logger {
             return servConfig;
 
         }).then((servConfig) => {
-            // Ring buffer for email stream notifications
-            if (servConfig.logger !== false) {
-                this.ringBuffer = new bunyan.RingBuffer({ limit: 10 });
-            }
-
             // Set config by logType
             _.each(logType, (conf, type) => {
                 logType[type].name = `${logConfig.name}-${type}`;
@@ -309,8 +304,8 @@ class Logger {
                 if (_.has(req, "user")) {
                     info.user = req.user;
                 }
-                if (_.has(req, "customer")) {
-                    info.customer = req.customer;
+                if (_.has(req, "consumer")) {
+                    info.consumer = req.consumer;
                 }
                 weblog.info(info);
             };

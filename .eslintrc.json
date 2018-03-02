@@ -138,7 +138,8 @@
         }
       },
       "globals": {
-        "expect": true
+        "expect": true,
+        "assert": true
       },
       "rules": {
         "max-nested-callbacks": ["error", 5],

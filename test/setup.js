@@ -21,7 +21,7 @@
 
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const { expect } = chai;
+const { assert } = chai;
 
 chai.use(chaiAsPromised);
 
@@ -32,5 +32,5 @@ process.on("rejectionHandled", (reason) => {
     console.error(reason);
 });
 
-global.expect = expect;
-module.exports = expect;
+global.assert = assert;
+module.exports = assert;
