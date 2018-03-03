@@ -81,7 +81,7 @@
     "watch:cli": "watch 'npm run build:cli' ./src/cli",
     "clean": "rm -rf bin/lib && rm -rf server",
     "test": "npm run lint && npm run test:mocha && npm run test:coverage",
-    "test:mocha": "cross-env NODE_ENV=test nyc mocha src/**/*.spec.js | tap-nyc",
+    "test:mocha": "cross-env NODE_ENV=test nyc mocha src/**/*.spec.js",
     "test:install": "npm install -g .",
     "test:coverage": "cross-env NODE_ENV=test nyc report --reporter=json && istanbul-combine -d coverage-all -p summary -r lcov 'coverage*/coverage-final.json'",
     "lint": "npm run lint:eslint && npm run lint:json",

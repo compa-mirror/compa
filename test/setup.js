@@ -24,6 +24,7 @@ const chaiAsPromised = require("chai-as-promised");
 const { assert } = chai;
 
 chai.use(chaiAsPromised);
+chai.config.proxyExcludedKeys.push("_promiseConstructor");
 
 process.on("unhandledRejection", (reason) => {
     console.error(reason);
