@@ -23,7 +23,7 @@ const util = require("util");
 const stream = require("stream");
 const _ = require("lodash");
 const bunyan = require("bunyan");
-const mailer = require("./mailer");
+const mailer = require("./");
 
 const Stream = stream.Writable || stream.Stream;
 const transport = new WeakMap();
