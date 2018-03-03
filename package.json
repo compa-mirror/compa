@@ -53,7 +53,7 @@
     "juice": "^4.2.2",
     "lodash": "^4.17.4",
     "method-override": "^2.3.6",
-    "nodemailer": "^2.7.2",
+    "nodemailer": "^4.6.0",
     "serve-favicon": "^2.3.0",
     "showdown": "^1.4.1",
     "ssl-config": "^1.0.0",
