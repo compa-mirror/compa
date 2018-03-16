@@ -25,7 +25,7 @@ const https = require("https");
 const express = require("express");
 const Promise = require("bluebird");
 const sslConfig = require("ssl-config");
-const { logger, mailer } = require("./helpers");
+const { logger, mailer } = require("./commons");
 
 
 /**
@@ -47,12 +47,12 @@ class CompaServer {
      * @returns {Promise} on success return express/server instance
      */
     create() {
-        const confServer = this.config.server;
-        const { port, hostname, key: isHTTPS } = confServer;
+        const { app, config: { server: confServer } } = this;
+        const { port, hostname } = confServer;
         const address = confServer.address || hostname;
+        let log;
 
         return new Promise((resolve, reject) => {
-
             if (process.getuid && port < 1024 && process.getuid() !== 0) {
                 return reject(new Error(
                     "Can't listen ports lower than 1024 on POSIX systems unless you're root"
@@ -60,16 +60,15 @@ class CompaServer {
             }
 
             resolve();
-
         }).then(() => {
             return logger.setup(this.config);
-        }).then((log) => {
-            this.log = log;
+        }).then((logInstance) => {
+            log = logInstance;
+            app.use(logger.accessMiddleware());
 
             return mailer.setup(this.config, log);
         }).then(() => {
-
-            if (isHTTPS) {
+            if (confServer.key && confServer.cert) {
                 const readFile = Promise.promisify(fs.readFile);
                 const key = readFile(confServer.key);
                 const cert = readFile(confServer.cert);
@@ -78,10 +77,10 @@ class CompaServer {
             }
 
             return [];
-
         }).spread((key, cert) => {
             if (key && cert) {
                 const ssl = sslConfig("intermediate");
+
                 // TODO: bounce?
                 return https.createServer({
                     key: key,
@@ -89,20 +88,20 @@ class CompaServer {
                     ciphers: ssl.ciphers,
                     honorCipherOrder: true,
                     secureOptions: ssl.minimumTLSVersion
-                }, this.app);
+                }, app);
             }
 
-            return http.createServer(this.app);
-
+            return http.createServer(app);
         }).then((appServer) => {
             return Promise.fromCallback((callback) => {
                 appServer.listen(port, address, () => {
-                    this.log.info("Listening Compa on %s:%s", address, port);
-                    callback(null, { server: appServer, app: this.app });
+                    log.info("Listening Compa on %s:%s", address, port);
+                    callback(null, { server: appServer, app: app });
                 });
             });
         });
     }
+
 }
 
 module.exports = CompaServer;

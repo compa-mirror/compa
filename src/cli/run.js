@@ -25,8 +25,8 @@ const path = require("path");
 const _ = require("lodash");
 const print = require("./print");
 const Promise = require("bluebird");
-const CompaServer  = require("../../server/compa");
-const { defaults }  = require("../../server/helpers");
+const CompaServer  = require("../server/compa");
+const { defaults }  = require("../server/commons");
 
 /**
  * CLI command for run/start Compa server.
@@ -76,10 +76,10 @@ class Run {
      * @param {object} argv - parameters already parse
      */
     handler(argv) {
-
         if (argv.config) {
             this.getConfig(argv.config).then((configData) => {
                 let config = _.cloneDeep(configData);
+
                 config = _.defaultsDeep(config, defaults);
 
                 const server = new CompaServer(config);
@@ -87,7 +87,6 @@ class Run {
                 return server.create().then(() => {
                     print.info("Compa server runs successfully");
                 });
-
             }).catch((err) => {
                 print.error(err);
                 process.exitCode = 1;
@@ -113,7 +112,6 @@ class Run {
         }
 
         return Promise.map(files, (file) => {
-
             const promise = new Promise((resolve, reject) => {
                 fs.readFile(file, (err, raw) => {
                     if (err) {
@@ -125,20 +123,16 @@ class Run {
                     } else {
                         resolve(raw || null);
                     }
-
                 });
             });
 
             return promise;
         }).then((filesRaw) => {
-
             // Remove null for get last available file
             _.remove(filesRaw, _.isNull);
 
             return filesRaw;
-
         }).all().then((raw) => {
-
             try {
                 _.extend(config, JSON.parse(raw));
 
@@ -148,6 +142,7 @@ class Run {
             }
         });
     }
+
 }
 
 module.exports = new Run();

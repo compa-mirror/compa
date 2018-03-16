@@ -42,11 +42,13 @@ const logError = (method, args) => {
 
     if (!_.isArray(args)) {
         console[method].apply(this, args);
+
         return;
     }
 
     for (let i = 0; i < args.length; i++) {
         const value = args[i];
+
         // Show only error message in production
         if (!isDebug && (value instanceof Error)) {
             args[i] = value.message;
