@@ -12,6 +12,7 @@
         }
     },
     "plugins": [
-        ["transform-runtime", {"polyfill": false}]
+        ["transform-runtime", { "polyfill": false }],
+        ["module-rewrite", { "replaceFunc": "./scripts/module-rewrite.js" }]
     ]
 }
