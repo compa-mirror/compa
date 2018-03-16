@@ -56,6 +56,7 @@ class Logger {
                 res: bunyan.stdSerializers.res,
                 err: (err) => {
                     const obj = bunyan.stdSerializers.err(err);
+
                     // Remove private properties (with underscore)
                     return _.pick(obj, _.filter(_.keys(obj), (key) => {
                         return key[0] !== "_";
@@ -71,15 +72,15 @@ class Logger {
                     if (user) {
                         return { id: user.id, type: user.type };
                     }
-                    return { id: "<none>" };
 
+                    return { id: "<none>" };
                 },
                 consumer: (consumer) => {
                     if (consumer) {
                         return { token: consumer.token, name: consumer.name || "<none>" };
                     }
-                    return { token: "<none>", name: "<none>" };
 
+                    return { token: "<none>", name: "<none>" };
                 }
             }
         };
@@ -213,7 +214,6 @@ class Logger {
         };
 
         return new Promise((resolve, reject) => {
-
             const servConfig = _.get(config, "server");
 
             if (_.isEmpty(servConfig)) {
@@ -221,7 +221,6 @@ class Logger {
             }
 
             resolve(servConfig);
-
         }).then((servConfig) => {
             // Set log type
             streamType = servConfig.logger !== false ? streamType.find((value) => {
@@ -244,7 +243,6 @@ class Logger {
             }
 
             return servConfig;
-
         }).then((servConfig) => {
             // Set config by logType
             _.each(logType, (conf, type) => {
@@ -287,7 +285,7 @@ class Logger {
      * Logger middleware for Express server requests.
      * @returns {function} logger request middleware
      */
-    accessLogger() {
+    accessMiddleware() {
         return (req, res, next) => {
             const { end } = res;
             const weblog = this.weblog.child({ "req_id": uuid.v4(), component: "web" });
@@ -317,7 +315,7 @@ class Logger {
      * Logger middleware for socket.io requests.
      * @returns {function} logger request middleware
      */
-    socketLogger() {
+    socketMiddleware() {
         return (io, next) => {
             const startTime = Date.now();
             const socketlog = this.socketlog.child({ "req_id": uuid.v4(), component: "socket" });
@@ -340,6 +338,7 @@ class Logger {
     records() {
         return this.ringBuffer.records;
     }
+
 }
 
 // Exports

@@ -33,7 +33,6 @@ let mockConfig = _.cloneDeep(defaults);
 let appServer = {};
 
 describe("Logger helper", () => {
-
     afterEach(() => {
         mockConfig = _.cloneDeep(defaults);
     });
@@ -50,6 +49,7 @@ describe("Logger helper", () => {
         mockConfig.server.logger = false;
         const promise = logger.setup(mockConfig).then((log) => {
             assert.isUndefined(logger.records());
+
             return log;
         });
 
@@ -90,6 +90,7 @@ describe("Logger helper", () => {
         mockConfig.instance.contactEmail = "test@email.com";
         const promise = logger.setup(mockConfig).then((log) => {
             assert.isArray(logger.records());
+
             return log;
         });
 
@@ -127,6 +128,7 @@ describe("Logger helper", () => {
 
     it("should have success setup when logger type is 'file'", () => {
         const loggerDir = path.join(os.tmpdir(), "compa-log-test", `${Date.now()}`);
+
         mockConfig.server.loggerType = "file";
         mockConfig.server.loggerDir = loggerDir;
         const promise = mkdirp(loggerDir).then(() => {
@@ -144,6 +146,7 @@ describe("Logger helper", () => {
 
     it("should set default error level when type is 'file' and level is undefined", () => {
         const loggerDir = path.join(os.tmpdir(), "compa-log-test", `${Date.now()}`);
+
         mockConfig.server.loggerType = "file";
         mockConfig.server.loggerLevel = undefined;
         mockConfig.server.loggerDir = loggerDir;
@@ -156,6 +159,7 @@ describe("Logger helper", () => {
 
     it("should have success setup when logger type is 'rotate'", () => {
         const loggerDir = path.join(os.tmpdir(), "compa-log-test", `${Date.now()}`);
+
         mockConfig.server.loggerType = "rotate";
         mockConfig.server.loggerDir = loggerDir;
         const promise = mkdirp(loggerDir).then(() => {
@@ -178,6 +182,7 @@ describe("Logger helper", () => {
 
             return compa.create().then((instance) => {
                 appServer  = instance.server;
+
                 return instance;
             });
         });

@@ -71,7 +71,6 @@ class EmailStream {
         const { config } = this;
 
         if (config.to && config.to.length && log.component !== "mail") {
-
             const levelName = bunyan.nameFromLevel[log.level] || `LEVEL_${log.level}`;
 
             // Send email
@@ -102,6 +101,7 @@ class EmailStream {
             _transport.close();
         }
     }
+
 }
 
 util.inherits(EmailStream, Stream);

@@ -93,7 +93,6 @@ class Mailer {
         };
 
         return new Promise((resolve) => {
-
             if (!_.isString(config.themePath)) {
                 // Use default template
                 const templatesDefault = path.resolve(__dirname, "../views/", "emails");
@@ -111,9 +110,7 @@ class Mailer {
             }).then(() => {
                 return templatesTheme;
             });
-
         }).then((templatesPath) => {
-
             this.templatesPath = templatesPath;
 
             // Mailer options and instance
@@ -153,7 +150,6 @@ class Mailer {
      * @returns {Promise} on success returns a object the template
      */
     render(view, locals, options = {}) {
-
         if (!this.templatesPath) {
             return Promise.reject(
                 new Error("Template path not configured yet, please run `.setup()` before `.render()`")
@@ -194,15 +190,12 @@ class Mailer {
 
         // Get available templates and render
         return readdir(viewDir).filter((file) => {
-
             const filePath = path.join(viewDir, file);
 
             return stat(filePath).then((stats) => {
                 return stats.isFile();
             });
-
         }).reduce((templates, file) => {
-
             const ext = path.extname(file);
             const filename = path.basename(file, ext);
             const type = tplType[filename];
@@ -218,17 +211,13 @@ class Mailer {
                 });
 
                 return renderToString(tpl);
-
             }).then((html)  => {
                 templates[type] = html;
 
                 return templates;
             });
-
         }, {}).then((templates) => {
-
             if (templates.html && toStyle) {
-
                 const juiceOpts = _.isObject(toStyle) ? toStyle : null;
 
                 return juiceResources(templates.html, juiceOpts).then((html) => {
@@ -239,15 +228,12 @@ class Mailer {
             }
 
             return templates;
-
         }).then((templates) => {
-
             if (templates.html && !templates.text) {
                 templates.text = htmlToText.fromString(templates.html, toTextOpts);
             }
 
             return templates;
-
         });
     }
 
@@ -267,7 +253,6 @@ class Mailer {
      * @returns {Promise} on success returns a message information
      */
     send(view, locals, options = {}) {
-
         if (!_.isString(view)) {
             return Promise.reject(new Error("`view` string parameter is required"));
         }
@@ -311,20 +296,18 @@ class Mailer {
 
             // Send email
             return this.transport.sendMail(sendOptions).then((info) => {
-
                 this.log.info({
                     to: locals.to,
                     subject: subject,
                     response: info.response
                 }, "Message sent success, id: %s", info.messageId);
+
                 return info;
-
             }).catch((err) => {
-
                 this.log.error(err, "Error sending email, to: %s, subject: %s", locals.to, subject);
+
                 return err;
             });
-
         }).catch((err) => {
             if (this.log) {
                 this.log.error(err, "Render email error");
@@ -333,6 +316,7 @@ class Mailer {
             return err;
         });
     }
+
 }
 
 // Exports
