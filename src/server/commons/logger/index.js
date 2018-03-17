@@ -2,7 +2,7 @@
 //
 // Compa -- worldwide social directory decentralized and federated
 // Copyright (C) 2017 Distopico <distopico@riseup.net>
-// logger.js is part of Compa.
+// logger/index.js is part of Compa.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -20,14 +20,14 @@
 "use strict";
 
 const fs = require("fs");
-const _ = require("lodash");
 const path = require("path");
-const Promise = require("bluebird");
 const cluster = require("cluster");
+const Promise = require("bluebird");
 const uuid = require("uuid");
 const bunyan = require("bunyan");
 const fileStreamRotator = require("file-stream-rotator");
 const EmailStream = require("../mailer/emailstream");
+const { get, has, omit, pick, cloneDeep, isEmpty } = require("../helpers");
 
 //  Private methods
 const getLoggerStreams = Symbol("getLoggerStreams");
@@ -58,14 +58,14 @@ class Logger {
                     const obj = bunyan.stdSerializers.err(err);
 
                     // Remove private properties (with underscore)
-                    return _.pick(obj, _.filter(_.keys(obj), (key) => {
+                    return pick(obj, Object.keys(obj).filter((key) => {
                         return key[0] !== "_";
                     }));
                 },
                 data: (data) => {
                     if (data) {
                         // Remove private data
-                        return _.omit(data, [ "password" ]);
+                        return omit(data, [ "password" ]);
                     }
                 },
                 user: (user) => {
@@ -116,11 +116,11 @@ class Logger {
             fatal: "fatal"
         };
 
-        if (_.isString(config.loggerDir)) {
+        if (typeof config.loggerDir === "string") {
             fileName = path.resolve(config.loggerDir, fileName);
         }
         // Convert to level name from number
-        if (_.isFinite(loggerLevel)) {
+        if (Number.isFinite(loggerLevel)) {
             loggerLevel = bunyan.nameFromLevel[loggerLevel];
         }
         errorLevel = errorLevel[loggerLevel] || "warn";
@@ -141,12 +141,12 @@ class Logger {
             };
 
             logStream = [ {
-                stream: fileStreamRotator.getStream(_.extend({
+                stream: fileStreamRotator.getStream(Object.assign({
                     filename: `${fileName}.%DATE%.log`
                 }, rotateConf))
             }, {
                 level: errorLevel[loggerLevel] || "warn",
-                stream: fileStreamRotator.getStream(_.extend({
+                stream: fileStreamRotator.getStream(Object.assign({
                     filename: `${fileName}.%DATE%.error.log`
                 }, rotateConf))
             } ];
@@ -162,7 +162,7 @@ class Logger {
         // Logs alerts to email
         if (config.alerts === true && config.contactEmail) {
             alertsEmails = config.contactEmail;
-        } else if (_.has(config, "alerts.to")) {
+        } else if (has(config, "alerts.to")) {
             alertsEmails = config.alerts.to;
         }
 
@@ -183,7 +183,7 @@ class Logger {
                     ringBuffer: ringBuffer,
                     address: config.address || config.hostname
                 }),
-                level: _.get(config, "alerts.level") || "warn"
+                level: get(config, "alerts.level") || "warn"
             });
         }
 
@@ -206,17 +206,17 @@ class Logger {
      */
     setup(config) {
         let streamType = [ "stream", "file", "rotate" ];
-        const logConfig = _.clone(this.logConfig, true);
+        const logConfig = cloneDeep(this.logConfig);
         const logType = {
-            access: _.clone(logConfig, true), // Access log for express middleware
-            server: _.clone(logConfig, true), // General server log
-            socket: _.clone(logConfig, true) // Socket.io log middleware
+            access: cloneDeep(logConfig), // Access log for express middleware
+            server: cloneDeep(logConfig), // General server log
+            socket: cloneDeep(logConfig) // Socket.io log middleware
         };
 
         return new Promise((resolve, reject) => {
-            const servConfig = _.get(config, "server");
+            const servConfig = get(config, "server");
 
-            if (_.isEmpty(servConfig)) {
+            if (isEmpty(servConfig)) {
                 return reject(new Error("Configuration is required for init Logger"));
             }
 
@@ -228,7 +228,7 @@ class Logger {
             }) || "stream" : false;
 
             if (streamType === "file" || streamType === "rotate") {
-                if (!_.isString(servConfig.loggerDir)) {
+                if (typeof servConfig.loggerDir !== "string") {
                     throw new Error(
                         "Logger with type 'file' or 'rotate' required 'loggerDir' option with a string path"
                     );
@@ -245,11 +245,11 @@ class Logger {
             return servConfig;
         }).then((servConfig) => {
             // Set config by logType
-            _.each(logType, (conf, type) => {
+            Object.keys(logType).forEach((type) => {
                 logType[type].name = `${logConfig.name}-${type}`;
 
                 logType[type].streams = this[getLoggerStreams](streamType, {
-                    config: _.extend({}, servConfig, _.get(config, "instance")),
+                    config: Object.assign({}, servConfig, get(config, "instance")),
                     logName: type,
                     ringBuffer: this.ringBuffer
                 });
@@ -299,10 +299,10 @@ class Logger {
                 res.end(chunk, encoding);
                 info = { req: req, res: res, serverTime: Date.now() - startTime };
 
-                if (_.has(req, "user")) {
+                if (has(req, "user")) {
                     info.user = req.user;
                 }
-                if (_.has(req, "consumer")) {
+                if (has(req, "consumer")) {
                     info.consumer = req.consumer;
                 }
                 weblog.info(info);

@@ -22,15 +22,17 @@
 const defaults = require("./defaults");
 const logger = require("./logger");
 const mailer = require("./mailer");
+const helpers = require("./helpers");
 
 /**
- * All available utilities for helpers module
- * @module helpers
+ * The commons modules packages
+ * @module commons
  */
-const helpers = {
+const commons = {
     defaults,
     logger,
-    mailer
+    mailer,
+    helpers
 };
 
-module.exports = helpers;
+module.exports = commons;

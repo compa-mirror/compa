@@ -22,6 +22,7 @@
 const fs = require("fs");
 const http = require("http");
 const https = require("https");
+const has = require("lodash/has");
 const express = require("express");
 const Promise = require("bluebird");
 const sslConfig = require("ssl-config");
@@ -47,7 +48,8 @@ class CompaServer {
      * @returns {Promise} on success return express/server instance
      */
     create() {
-        const { app, config: { server: confServer } } = this;
+        const { app, config } = this;
+        const { server: confServer } = config;
         const { port, hostname } = confServer;
         const address = confServer.address || hostname;
         let log;
@@ -61,12 +63,19 @@ class CompaServer {
 
             resolve();
         }).then(() => {
+            // Setup logger
             return logger.setup(this.config);
         }).then((logInstance) => {
             log = logInstance;
+            log.info("Initializing Compa server");
             app.use(logger.accessMiddleware());
 
-            return mailer.setup(this.config, log);
+            // Setup email
+            if (has(config, "mailer.host")) {
+                return mailer.setup(config, log);
+            }
+
+            return Promise.resolve();
         }).then(() => {
             if (confServer.key && confServer.cert) {
                 const readFile = Promise.promisify(fs.readFile);
@@ -81,6 +90,8 @@ class CompaServer {
             if (key && cert) {
                 const ssl = sslConfig("intermediate");
 
+                log.debug("Run over HTTPS server");
+
                 // TODO: bounce?
                 return https.createServer({
                     key: key,
@@ -90,6 +101,7 @@ class CompaServer {
                     secureOptions: ssl.minimumTLSVersion
                 }, app);
             }
+            log.debug("Run over HTTP server");
 
             return http.createServer(app);
         }).then((appServer) => {

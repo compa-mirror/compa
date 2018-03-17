@@ -19,14 +19,14 @@
 
 "use strict";
 
-const _ = require("lodash");
 const console = require("better-console");
+const { has, clone }  = require("../server/commons/helpers");
 
 /**
  * Console/print utility, inherits the same "better-console" method.
  * @module cli/print
  */
-const print = _.clone(console);
+const print = clone(console);
 
 /**
  * Add additionally behavior for `better-console` in error levels,
@@ -40,7 +40,7 @@ const logError = (method, args) => {
     const isDebug = process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development";
     let stack = null;
 
-    if (!_.isArray(args)) {
+    if (Array.isArray(args)) {
         console[method].apply(this, args);
 
         return;
@@ -56,7 +56,7 @@ const logError = (method, args) => {
         }
 
         // Show error stack only in debug mode
-        if (isDebug && _.has(value, "stack")) {
+        if (isDebug && has(value, "stack")) {
             ({ stack } = value);
         }
     }

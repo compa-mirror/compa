@@ -5,8 +5,8 @@
     "es6": true,
     "node": true
   },
-  "plugins": ["node"],
-  "extends": ["eslint:recommended", "plugin:node/recommended"],
+  "plugins": ["node", "import"],
+  "extends": ["eslint:recommended", "plugin:node/recommended", "plugin:lodash/recommended", "plugin:you-dont-need-lodash-underscore/compatible"],
   "rules": {
     "indent": ["error", 4],
     "linebreak-style": ["error", "unix"],
@@ -53,6 +53,7 @@
     "strict": ["error"],
     "no-eval": ["error"],
     "no-var": ["error"],
+    "radix": ["error", "as-needed"],
     "guard-for-in": ["error"],
     "new-cap": ["error", { "newIsCap": true, "capIsNew": true, "properties": false  }],
     "no-new": ["error"],
@@ -111,6 +112,13 @@
     "space-in-parens": ["error", "never"],
     "space-infix-ops": ["error", {"int32Hint": false}],
     "object-curly-spacing": ["error", "always"],
+    "no-restricted-globals": [
+      "error", "isFinite", "isNaN", "addEventListener", "blur", "close", "closed", "confirm",
+      "defaultStatus", "event", "external", "defaultstatus", "find", "focus", "frameElement", "frames", "history", "innerHeight", "innerWidth", "length", "location", "locationbar",
+      "menubar", "moveBy", "moveTo", "name", "onblur", "onerror", "onfocus", "onload", "onresize", "onunload", "open", "opener", "opera", "outerHeight", "outerWidth",
+      "pageXOffset", "pageYOffset", "parent", "print", "removeEventListener", "resizeBy", "resizeTo", "screen", "screenLeft", "screenTop", "screenX", "screenY",
+      "scroll", "scrollbars", "scrollBy", "scrollTo", "scrollX", "scrollY", "self", "status", "statusbar", "stop", "toolbar", "top"
+    ],
     "require-jsdoc": ["error", {
       "require": {
         "FunctionDeclaration": true,
@@ -134,7 +142,38 @@
       }
     }],
     "node/exports-style": ["error", "module.exports"],
-    "node/no-unsupported-features": ["error", {"version": 8}]
+    "node/no-unsupported-features": ["error", {"version": 8}],
+    "import/no-unresolved": ["error", {"commonjs": true}],
+    "import/named": ["error"],
+    "import/namespace": ["error"],
+    "import/default": ["error"],
+    "import/export": ["error"],
+    "import/no-self-import": ["error"],
+    "import/no-duplicates": ["error"],
+    "import/no-namespace": ["error"],
+    "import/no-amd": ["error"],
+    "import/no-mutable-exports": ["error"],
+    "import/no-named-as-default-member": ["error"],
+    "import/no-named-as-default": ["error"],
+    "import/no-named-default": ["error"],
+    "import/newline-after-import": ["error"],
+    "import/prefer-default-export": ["error"],
+    "import/no-absolute-path": ["error"],
+    "import/no-useless-path-segments": ["error"],
+    "import/unambiguous": ["error"],
+    "import/first": ["error", "absolute-first"],
+    "import/extensions": ["error", "always", {"js": "never"}],
+    "import/no-anonymous-default-export": ["error", {
+      "allowArray": true,
+      "allowObject": true
+    }],
+    "import/order": ["error", {
+      "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+      "newlines-between": "never"
+    }],
+    "lodash/prefer-lodash-method": ["off"],
+    "lodash/prefer-includes": ["off"],
+    "lodash/prefer-lodash-typecheck": ["off"]
   },
   "overrides": [
     {

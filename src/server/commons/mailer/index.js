@@ -2,7 +2,7 @@
 //
 // Compa -- worldwide social directory decentralized and federated
 // Copyright (C) 2017 Distopico <distopico@riseup.net>
-// mailer.js is part of Compa.
+// mailer/index.js is part of Compa.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -21,13 +21,13 @@
 
 const fs = require("fs");
 const path = require("path");
-const _ = require("lodash");
 const juice = require("juice");
 const htmlToText = require("html-to-text");
 const Promise = require("bluebird");
 const Vue = require("vue");
 const { createRenderer } = require("vue-server-renderer");
 const nodemailer = require("nodemailer");
+const { pick, omit, remove, isEmpty, isPlainObject } = require("../helpers");
 
 /**
  * Send and render email with templates with theme support,
@@ -45,7 +45,7 @@ class Mailer {
         this.from = null;
         this.subject = null;
         this.transport = null;
-        this.templateOpt = null;
+        this.templateOpts = null;
         this.templatesPath = null;
     }
 
@@ -60,6 +60,9 @@ class Mailer {
      * - - - - body.vue
      * - - - - body-text.vue
      * @param {object} config - the configuration for Compa project
+     * @param {object} [config.templateOpts] - the options for templates
+     * @param {object} [config.templateOpts.toText] - the options for parse text emails
+     * @param {object} [config.templateOpts.toStyle] - the style options for HTML templates
      * @param {object} config.mailer - options for mailer instance
      * @param {object} [config.mailer.user] - the username for SMTP authentication
      * @param {object} [config.mailer.pass] - the user password for SMTP authentication
@@ -93,7 +96,7 @@ class Mailer {
         };
 
         return new Promise((resolve) => {
-            if (!_.isString(config.themePath)) {
+            if (typeof config.themePath !== "string") {
                 // Use default template
                 const templatesDefault = path.resolve(__dirname, "../views/", "emails");
 
@@ -117,10 +120,10 @@ class Mailer {
             this.log = log.child({ component: "mail" });
             this.from = mailConfig.from || `no-reply@${hostname}`;
             this.subject = config.instance.name;
-            this.templateOpt = config.templateOpt || {};
+            this.templateOpts = config.templateOpts || {};
             this.renderer = createRenderer();
 
-            this.log.debug(_.omit(options, "auth"), "Connecting to SMTP server");
+            this.log.debug(omit(options, "auth"), "Connecting to SMTP server");
 
             // Verbose logs
             if (mailConfig.verbose) {
@@ -156,7 +159,7 @@ class Mailer {
             );
         }
 
-        const { toTextOpts, toStyle } = this.templateOpt;
+        const { toText, toStyle } = this.templateOpts;
         const viewDir = path.join(this.templatesPath, view);
         const tplIgnore = [];
         const tplType = {
@@ -174,7 +177,7 @@ class Mailer {
         const renderToString = Promise.promisify(this.renderer.renderToString);
 
         // Default render options
-        options = _.extend({
+        options = Object.assign({
             subject: true,
             body: true
         }, options);
@@ -217,10 +220,8 @@ class Mailer {
                 return templates;
             });
         }, {}).then((templates) => {
-            if (templates.html && toStyle) {
-                const juiceOpts = _.isObject(toStyle) ? toStyle : null;
-
-                return juiceResources(templates.html, juiceOpts).then((html) => {
+            if (templates.html && isPlainObject(toStyle)) {
+                return juiceResources(templates.html, toStyle).then((html) => {
                     templates.html = html;
 
                     return templates;
@@ -230,7 +231,7 @@ class Mailer {
             return templates;
         }).then((templates) => {
             if (templates.html && !templates.text) {
-                templates.text = htmlToText.fromString(templates.html, toTextOpts);
+                templates.text = htmlToText.fromString(templates.html, toText);
             }
 
             return templates;
@@ -253,25 +254,27 @@ class Mailer {
      * @returns {Promise} on success returns a message information
      */
     send(view, locals, options = {}) {
-        if (!_.isString(view)) {
+        if (typeof view !== "string") {
             return Promise.reject(new Error("`view` string parameter is required"));
         }
 
         // Extend options/locals
-        options = _.extend({
+        options = Object.assign({
             from: this.from
         }, options);
 
-        locals = _.extend({}, locals, _.pick(options, [ "from", "to" ]));
+        locals = Object.assign({}, locals, pick(options, [ "from", "to" ]));
 
         // Allow multiples emails
-        if (!_.isArray(locals.to)) {
+        if (!Array.isArray(locals.to)) {
             locals.to = [ locals.to ];
         }
 
         // Fallback origin as destination (for alerts and debug)
-        _.remove(locals.to, _.isUndefined);
-        if (_.isEmpty(locals.to)) {
+        remove(locals.to, (value) => {
+            return typeof value !== "undefined";
+        });
+        if (isEmpty(locals.to)) {
             locals.to = [ this.from ];
         }
 

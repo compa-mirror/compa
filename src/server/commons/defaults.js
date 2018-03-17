@@ -21,9 +21,11 @@
 
 const path = require("path");
 
-// All available configuration properties, for some properties the default value
-// will be defined when the application starts, this is only for reference.
-
+/**
+ * All available configuration properties, for some properties the default value
+ * will be defined when the application starts, this is only for reference.
+ * @module defaults
+ */
 const defaults = {
     instance: {
         name: "Compa",

@@ -24,17 +24,17 @@ const path = require("path");
 const sinon = require("sinon");
 const Promise = require("bluebird");
 const { mkdirp } = require("fs-extra");
-const _ = require("lodash");
 const Server = require("../../compa");
 const defaults = require("../defaults");
+const { omit, cloneDeep } = require("../helpers");
 const logger = require("./");
 
-let mockConfig = _.cloneDeep(defaults);
+let mockConfig = cloneDeep(defaults);
 let appServer = {};
 
 describe("Logger helper", () => {
     afterEach(() => {
-        mockConfig = _.cloneDeep(defaults);
+        mockConfig = cloneDeep(defaults);
     });
 
     it("should return the helpers", () => {
@@ -250,7 +250,7 @@ describe("Logger helper", () => {
 
             log.info({ user: userData });
             assert.isTrue(userSpy.calledOnce);
-            assert.deepEqual(userSpy.returnValues[0], _.omit(userData, "name"));
+            assert.deepEqual(userSpy.returnValues[0], omit(userData, "name"));
             userSpy.restore();
         });
 
@@ -275,7 +275,7 @@ describe("Logger helper", () => {
 
             log.info({ consumer: consumerData });
             assert.isTrue(consumerSpy.calledOnce);
-            assert.deepEqual(consumerSpy.returnValues[0], _.omit(consumerData, "secret"));
+            assert.deepEqual(consumerSpy.returnValues[0], omit(consumerData, "secret"));
             consumerSpy.restore();
         });
 

@@ -21,8 +21,8 @@
 
 const util = require("util");
 const stream = require("stream");
-const _ = require("lodash");
 const bunyan = require("bunyan");
+const { get, truncate } = require("../helpers");
 const mailer = require("./");
 
 const Stream = stream.Writable || stream.Stream;
@@ -47,14 +47,14 @@ class EmailStream {
     constructor(config) {
         Stream.call(this);
 
-        this.config = _.extend({
+        this.config = Object.assign({
             to: [],
             instanceName: null,
             ringBuffer: null,
             address: null
         }, config);
 
-        if (_.isString(config.to)) {
+        if (typeof config.to === "string") {
             this.config.to = [ config.to ];
         }
 
@@ -79,7 +79,7 @@ class EmailStream {
                 subject: util.format(
                     "[%s] Exception in Compa: %s From %s in %s(%s)",
                     levelName,
-                    _.truncate((_.get(log, "err.message") || log.msg), 30),
+                    truncate((get(log, "err.message") || log.msg), 30),
                     (config.instanceName || log.hostname),
                     log.hostname,
                     config.address

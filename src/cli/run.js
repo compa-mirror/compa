@@ -22,11 +22,12 @@
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
-const _ = require("lodash");
-const print = require("./print");
 const Promise = require("bluebird");
 const CompaServer  = require("../server/compa");
-const { defaults }  = require("../server/commons");
+const { defaults, helpers }  = require("../server/commons");
+const print = require("./print");
+
+const { cloneDeep, defaultsDeep, remove }  = helpers;
 
 /**
  * CLI command for run/start Compa server.
@@ -78,9 +79,9 @@ class Run {
     handler(argv) {
         if (argv.config) {
             this.getConfig(argv.config).then((configData) => {
-                let config = _.cloneDeep(configData);
+                let config = cloneDeep(configData);
 
-                config = _.defaultsDeep(config, defaults);
+                config = defaultsDeep(config, defaults);
 
                 const server = new CompaServer(config);
 
@@ -105,7 +106,7 @@ class Run {
         const errors = [];
         let files;
 
-        if (_.isArray(filename)) {
+        if (Array.isArray(filename)) {
             files = filename;
         } else {
             files = [ filename ];
@@ -129,14 +130,14 @@ class Run {
             return promise;
         }).then((filesRaw) => {
             // Remove null for get last available file
-            _.remove(filesRaw, _.isNull);
+            remove(filesRaw, (value) => {
+                return value === null;
+            });
 
             return filesRaw;
         }).all().then((raw) => {
             try {
-                _.extend(config, JSON.parse(raw));
-
-                return config;
+                return Object.assign(config, JSON.parse(raw));
             } catch (err) {
                 throw new Error(`Error parsing JSON configuration: ${err.toString()}, Please validate your JSON file.`);
             }
