@@ -16,12 +16,11 @@
     "npm": ">=2"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-istanbul": "^4.1.5",
     "babel-plugin-module-rewrite": "^0.2.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
@@ -40,7 +39,6 @@
     "watch": "^1.0.2"
   },
   "dependencies": {
-    "babel-runtime": "^6.26.0",
     "bcryptjs": "^2.4.3",
     "better-console": "^1.0.1",
     "bluebird": "^3.5.1",
@@ -77,7 +75,7 @@
     "./doc/compa.1"
   ],
   "scripts": {
-    "start": "npm run build && ./bin/compa",
+    "start": "npm run build && ./bin/compa run",
     "build": "npm run build:cli && npm run build:server && echo Compile Done",
     "build:server": "babel ./src/server --out-dir ./server --copy-files",
     "build:cli": "babel ./src/cli --out-dir ./bin/lib --copy-files",
@@ -86,7 +84,7 @@
     "watch:cli": "watch 'npm run build:cli' ./src/cli",
     "clean": "rm -rf bin/lib && rm -rf server",
     "test": "npm run lint && npm run test:mocha && npm run test:coverage",
-    "test:mocha": "cross-env NODE_ENV=test nyc mocha src/**/*.spec.js",
+    "test:mocha": "cross-env NODE_ENV=test nyc mocha 'src/**/*.spec.js'",
     "test:install": "npm install -g .",
     "test:coverage": "cross-env NODE_ENV=test nyc report --reporter=json && istanbul-combine -d coverage-all -p summary -r lcov 'coverage*/coverage-final.json'",
     "lint": "npm run lint:eslint && npm run lint:json",
