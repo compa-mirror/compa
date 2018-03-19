@@ -56,7 +56,7 @@ class Run {
      * @returns {Yags} command instance extended
      */
     builder(argv) {
-        const defaultConfig = [ "/etc/compa.json" ];
+        const defaultConfig = [ "/etc/compa.json", path.resolve(__dirname, "../..", "compa.json")  ];
 
         if (process.env.HOME) {
             defaultConfig.push(path.join(process.env.HOME, ".compa.json"));
@@ -64,7 +64,7 @@ class Run {
 
         argv.usage("Usage: -c <configfile>")
             .alias("c", "config")
-            .default("c", defaultConfig, "/etc/compa.json or ~/.compa.json")
+            .default("c", defaultConfig, "/etc/compa.json, ~/.compa.json or ./compa.json")
             .string("c")
             .env("COMPA")
             .number([ "port" ]);
