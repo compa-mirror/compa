@@ -74,4 +74,4 @@ update_dependencies:
   script:
     - nvm install 8
     - npm install -g renovate@latest
-    - renovate --platform gitlab --endpoint https://framagit.org/api/v4 --token ${GITLAB_AUTH_TOKEN} --labels=renovate,dependency
+    - renovate --platform gitlab --endpoint https://framagit.org/api/v4 --token ${GITLAB_AUTH_TOKEN} --labels=renovate,dependency compa/compa
