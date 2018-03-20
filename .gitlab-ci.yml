@@ -64,7 +64,11 @@ test_node8:
 
 update_dependencies:
   stage: update
-  before_script:
-    - npm install -g renovate
+  cache:
+    paths:
+    - ${HOME}/.npm
+    - ${HOME}/.nvm
   script:
+    - nvm install 6
+    - npm install -g renovate
     - renovate --platform gitlab --endpoint https://gitlab.com/api/v4 --token ${GITLAB_AUTH_TOKEN} --autodiscover
