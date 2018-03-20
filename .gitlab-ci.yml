@@ -9,9 +9,12 @@ before_script:
 
 stages:
 - test
+- update
 
 test_node4:
   stage: test
+  except:
+    - schedules
   script:
     - nvm install 4
     - npm install
@@ -21,36 +24,47 @@ test_node4:
 
 test_node5:
   stage: test
+  except:
+    - schedules
   script:
     - nvm install 5
     - npm install
     - npm run test
     - npm run test:install
-    - npm run test:coverage
 
 test_node6:
   stage: test
+  except:
+    - schedules
   script:
     - nvm install 6
     - npm install
     - npm run test
     - npm run test:install
-    - npm run test:coverage
 
 test_node7:
   stage: test
+  except:
+    - schedules
   script:
     - nvm install 7
     - npm install
     - npm run test
     - npm run test:install
-    - npm run test:coverage
 
 test_node8:
   stage: test
+  except:
+    - schedules
   script:
     - nvm install 8
     - npm install
     - npm run test
     - npm run test:install
-    - npm run test:coverage
+
+update_dependencies:
+  stage: update
+  before_script:
+    - npm install -g renovate
+  script:
+    - renovate --platform gitlab --endpoint https://gitlab.com/api/v4 --token ${GITLAB_AUTH_TOKEN} --autodiscover
