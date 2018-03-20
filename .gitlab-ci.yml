@@ -69,6 +69,6 @@ update_dependencies:
     - ${HOME}/.npm
     - ${HOME}/.nvm
   script:
-    - nvm install 6
-    - npm install -g renovate
+    - nvm install 8
+    - npm install -g renovate@latest
     - renovate --platform gitlab --endpoint https://gitlab.com/api/v4 --token ${GITLAB_AUTH_TOKEN} --autodiscover
