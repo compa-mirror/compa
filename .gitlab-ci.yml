@@ -63,6 +63,7 @@ test_node8:
     - npm run test:install
 
 update_dependencies:
+  allow_failure: true
   stage: update
   cache:
     paths:
@@ -71,4 +72,4 @@ update_dependencies:
   script:
     - nvm install 8
     - npm install -g renovate@latest
-    - renovate --platform gitlab --endpoint https://gitlab.com/api/v4 --token ${GITLAB_AUTH_TOKEN} --autodiscover
+    - renovate --platform gitlab --endpoint https://framagit.org/api/v4 --token ${GITLAB_AUTH_TOKEN} --autodiscover
