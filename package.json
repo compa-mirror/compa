@@ -111,8 +111,12 @@
     "app",
     "server"
   ],
-  "greenkeeper": {
-    "ignore": []
+  "renovate": {
+    "pinVersions": false,
+    "upgradeInRange": true,
+    "ignoreDeps": [
+      "nodemailer"
+    ]
   },
   "nyc": {
     "require": [
