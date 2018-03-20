@@ -65,6 +65,8 @@ test_node8:
 update_dependencies:
   allow_failure: true
   stage: update
+  only:
+    - schedules
   cache:
     paths:
     - ${HOME}/.npm
