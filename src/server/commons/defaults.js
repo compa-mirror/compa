@@ -48,7 +48,9 @@ const defaults = {
         dataDir: "/var/local/compa",
         enableUploads: true,
         serverUser: null,
-        serverGroup: null
+        serverGroup: null,
+        proxy: null,
+        compress: false
     },
     database: {
         adapter: "memory"

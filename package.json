@@ -12,7 +12,7 @@
   },
   "bugs": "https://framagit.org/compa/compa/issues",
   "engines": {
-    "node": ">=4 <=8",
+    "node": ">=4 <=9",
     "npm": ">=2"
   },
   "devDependencies": {
@@ -44,8 +44,10 @@
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "bunyan": "^1.8.12",
+    "compression": "^1.7.2",
     "connect-waterline": "^0.1.0",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "file-stream-rotator": "^0.2.1",
@@ -60,6 +62,7 @@
     "serve-favicon": "^2.4.5",
     "showdown": "^1.8.6",
     "ssl-config": "^1.0.0",
+    "statuses": "^1.5.0",
     "ua-parser-js": "^0.7.17",
     "uuid": "^3.2.1",
     "validator": "^9.4.1",

@@ -24,10 +24,15 @@ const http = require("http");
 const https = require("https");
 const has = require("lodash/has");
 const express = require("express");
+const helmet = require("helmet");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const methodOverride = require("method-override");
+const compression = require("compression");
 const Promise = require("bluebird");
 const sslConfig = require("ssl-config");
-const { logger, mailer } = require("./commons");
-
+const { logger } = require("./commons");
+const { mailer } = require("./core");
 
 /**
  * Compa server with support http/https.
@@ -105,6 +110,30 @@ class CompaServer {
 
             return http.createServer(app);
         }).then((appServer) => {
+            // Proxy
+            app.set("trust proxy", confServer.proxy || false);
+
+            // Body parse
+            app.use(bodyParser.urlencoded({ extended: true }));
+            app.use(bodyParser.json());
+
+            // Some middlewares
+            app.use(methodOverride());
+            app.use(cookieParser());
+            // TODO: app.use(sessionMiddleware);
+            app.use(express.query()); // TODO: for what?
+            // app.use(app.isMalformed());
+            if (confServer.compress) {
+                app.use(compression());
+            }
+
+            // Secure policy
+            app.use(helmet({
+                dnsPrefetchControl: false,
+                hidePoweredBy: { setTo: "Compa" }
+            }));
+            // CpsApp.use(helmet.contentSecurityPolicy()); TODO: CSP implement
+
             return Promise.fromCallback((callback) => {
                 appServer.listen(port, address, () => {
                     log.info("Listening Compa on %s:%s", address, port);

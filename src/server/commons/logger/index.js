@@ -26,7 +26,7 @@ const Promise = require("bluebird");
 const uuid = require("uuid");
 const bunyan = require("bunyan");
 const fileStreamRotator = require("file-stream-rotator");
-const EmailStream = require("../mailer/emailstream");
+const EmailStream = require("../../core/mailer/emailstream");
 const { get, has, omit, pick, cloneDeep, isEmpty } = require("../helpers");
 
 //  Private methods
@@ -34,7 +34,7 @@ const getLoggerStreams = Symbol("getLoggerStreams");
 
 /**
  * Logger utility class.
- * @module helpers/logger
+ * @module logger
  */
 class Logger {
 

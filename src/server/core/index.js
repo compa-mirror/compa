@@ -1,8 +1,8 @@
-// Commons modules for Compa
+// Core modules for Compa
 //
 // Compa -- worldwide social directory decentralized and federated
 // Copyright (C) 2017 Distopico <distopico@riseup.net>
-// commons/index.js is part of Compa.
+// core/index.js is part of Compa.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as
@@ -19,18 +19,14 @@
 
 "use strict";
 
-const defaults = require("./defaults");
-const logger = require("./logger");
-const helpers = require("./helpers");
+const mailer = require("./mailer");
 
 /**
- * The commons modules packages
- * @module commons
+ * The core modules packages
+ * @module core
  */
 const commons = {
-    defaults,
-    logger,
-    helpers
+    mailer
 };
 
 module.exports = commons;

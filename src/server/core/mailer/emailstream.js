@@ -22,7 +22,7 @@
 const util = require("util");
 const stream = require("stream");
 const bunyan = require("bunyan");
-const { get, truncate } = require("../helpers");
+const { get, truncate } = require("../../commons/helpers");
 const mailer = require("./");
 
 const Stream = stream.Writable || stream.Stream;
@@ -30,7 +30,7 @@ const transport = new WeakMap();
 
 /**
  * Stream to send emails with logs
- * @module helpers/emailstream
+ * @module mailer/emailstream
  */
 class EmailStream {
 

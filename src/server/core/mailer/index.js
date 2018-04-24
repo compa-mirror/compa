@@ -24,14 +24,14 @@ const path = require("path");
 const juice = require("juice");
 const htmlToText = require("html-to-text");
 const Promise = require("bluebird");
+const nodemailer = require("nodemailer");
 const Vue = require("vue");
 const { createRenderer } = require("vue-server-renderer");
-const nodemailer = require("nodemailer");
-const { pick, omit, remove, isEmpty, isPlainObject } = require("../helpers");
+const { pick, omit, remove, isEmpty, isPlainObject } = require("../../commons/helpers");
 
 /**
  * Send and render email with templates with theme support,
- * @module helpers/mailer
+ * @module mailer
  */
 class Mailer {
 
