@@ -25,6 +25,7 @@ const omit = require("lodash/omit");
 const pick = require("lodash/pick");
 const clone = require("lodash/clone");
 const cloneDeep = require("lodash/cloneDeep");
+const camelCase = require("lodash/camelCase");
 const defaults = require("lodash/defaults");
 const defaultsDeep = require("lodash/defaultsDeep");
 const remove = require("lodash/remove");
@@ -46,6 +47,7 @@ const helpers = {
     cloneDeep,
     defaults,
     defaultsDeep,
+    camelCase,
     remove,
     isEmpty,
     isPlainObject,

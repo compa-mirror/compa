@@ -26,6 +26,9 @@
  */
 
 const statuses = require("statuses");
+const { camelCase } = require("../helpers");
+
+const statusCodes = statuses.STATUS_CODES;
 
 /**
  * HttpsRes main class for HTTP response objects
@@ -33,31 +36,79 @@ const statuses = require("statuses");
  */
 class Httpsres extends Error {
 
-    static [Symbol.hasInstance](instance) {
-
-        return internals.Boom.isBoom(instance);
-    }
-
-    constructor(message, options = {}) {
+    constructor(err, options = {}) {
         super();
 
-        if (message instanceof Error) {
-            return internals.Boom.boomify(Hoek.clone(message), options);
+        const { statusCode = 500, data = null, instance = Httpsres } = options;
+        let errorInstance;
+        let message;
+
+        if (err instanceof Error) {
+            errorInstance = err;
+            message = options.message || err.message;
+        } else {
+            message = err;
+            errorInstance = message ? new Error(message) : new Error();
         }
 
-        const { statusCode = 500, data = null, ctor = internals.Boom } = options;
-        const error = new Error(message ? message : undefined);         // Avoids settings null message
-        Error.captureStackTrace(error, ctor);                           // Filter the stack to our external API
-        error.data = data;
-        internals.initialize(error, statusCode);
-        error.typeof = ctor;
+
+        // The stack to external called
+        Error.captureStackTrace(errorInstance, instance);
+        errorInstance.data = data;
+        errorInstance.typeof = instance;
+        this.format(errorInstance, statusCode, message);
 
         if (options.decorate) {
-            Object.assign(error, options.decorate);
+            Object.assign(errorInstance, options.decorate);
+        }
+
+        return errorInstance;
+    }
+
+    format (error, statusCode, message) {
+        let code = parseInt(statusCode, 10);
+
+        if (!code) {
+            code = 500;
+        }
+
+        if (!error.hasOwnProperty("data")) {
+            error.data = null;
+        }
+
+        error.code = code;
+        error.payload = {
+            statusCode: code,
+            error: statuses[code] || "Unknown error"
+        };
+
+        if (!error.message) {
+            error.message = error.payload.error;
+        }
+
+        if (this.code === 500) {
+            // Hide the internal error from response
+            error.payload.message = "Internal server error";
+        } else {
+            error.payload.message = message || error.message;
         }
 
         return error;
     }
+
 }
+
+Object.keys(statusCodes).forEach((status) => {
+    const method = camelCase(statusCodes[status]);
+    const code = Number(status);
+
+    if (code < 400) {
+        return;
+    }
+
+    Httpsres[method] = function statusMethod(err, data) {
+        return new Httpsres(err, { statusCode: code, data: data, instance: Httpsres[method] });
+    };
+});
 
 module.exports = Httpsres;
