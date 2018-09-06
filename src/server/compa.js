@@ -33,6 +33,10 @@ const Promise = require("bluebird");
 const sslConfig = require("ssl-config");
 const { logger } = require("./commons");
 const { mailer } = require("./core");
+const { HttpError } = require("./commons/httpres");
+const boom = require("boom");
+var errTest = new Error('test err');
+var errTest2 = new Error('test err2');
 
 /**
  * Compa server with support http/https.
@@ -135,6 +139,34 @@ class CompaServer {
             // CpsApp.use(helmet.contentSecurityPolicy()); TODO: CSP implement
 
             return Promise.fromCallback((callback) => {
+                //console.log(httpres.badRequest('test', {data: 'algo'}));
+                console.log(errTest.stack);
+                var test = new HttpError('test');
+                var test2 = new HttpError(errTest);
+                console.log(test);
+                console.log(test.name);
+                console.log(test instanceof Error);
+                console.log(test instanceof HttpError);
+                console.log(test.stack);
+                console.log(test2);
+                console.log(test2.stack);
+                console.log(test.format);
+                console.log(test.getTest);
+                console.log(HttpError.badRequest('a bad request', {test: 'algo'}));
+                console.log(HttpError.badRequest('a bad request', {test: 'algo'}).constructor);
+                console.log(typeof HttpError.badRequest('a bad request', {test: 'algo'}));
+                var test3 = new boom('test');
+                var test4 = new boom(errTest2);
+                console.log(test3);
+                console.log(test3.name);
+                console.log(test3.stack);
+                console.log(test4);
+                console.log(test4.stack);
+                console.log(boom.badRequest('a bad request', {test: 'algo'}));
+                console.log(boom.badRequest('a bad request', {test: 'algo'}).constructor);
+                console.log(typeof boom.badRequest('a bad request', {test: 'algo'}));
+                console.log(HttpError);
+                console.log(boom);
                 appServer.listen(port, address, () => {
                     log.info("Listening Compa on %s:%s", address, port);
                     callback(null, { server: appServer, app: app });

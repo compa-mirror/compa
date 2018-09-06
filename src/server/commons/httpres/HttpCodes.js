@@ -20,19 +20,27 @@
 "use strict";
 
 const { camelCase } = require("../helpers");
-const HttpError = require("./HttpError");
-const HttpCodes = require("./HttpCodes");
 const statusCodes = require("./codes.json");
 
-const { statuses, types } = new HttpCodes();
-
-console.log(statuses);
 /**
- * Response HTTP code/message with friendly objects
- * @module httpres
+ * HttpError main class for HTTP error response objects
+ * @extends Error
  */
-module.exports = {
-    HttpError,
-    statuses,
-    types
-};
+class HttpCodes {
+
+    constructor() {
+        this.statuses = {};
+        this.types = {};
+
+        Object.keys(statusCodes).forEach((code) => {
+            const [ status ] = statusCodes[code];
+            const methodType = camelCase(status);
+
+            this.statuses[status] = code;
+            this.types[status] = methodType;
+        });
+    }
+
+}
+
+module.exports = HttpCodes;

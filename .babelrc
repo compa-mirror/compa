@@ -13,6 +13,11 @@
         }
     },
     "plugins": [
-        ["module-rewrite", { "replaceFunc": "./scripts/module-rewrite.js" }]
+        ["module-rewrite", {
+            "replaceFunc": "./scripts/module-rewrite.js"
+        }],
+        ["babel-plugin-transform-builtin-extend", {
+            "globals": ["Error", "Array"]
+        }]
     ]
 }
