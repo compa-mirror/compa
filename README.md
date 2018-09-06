@@ -10,7 +10,7 @@ This is Compa [`*/kompa/`](https://framagit.org/compa/compa/wikis/FAQ#what-mean-
 this is a horizontal [community project][community], anyone can run and participate and contribute, the focus of the project is work for 
 a good user interface, a clean REST API and connecting the people for a better world.
 
-Compa use ActivtyPub as principal protocol and is compatible with Pump.io, Mastodon and other free/open source social networks
+Compa use ActivityPub as principal protocol and is compatible with Pump.io, Mastodon and other free/open source social networks
 
 ## What's Compa?
 
