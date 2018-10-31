@@ -71,7 +71,7 @@
     "vue": "^2.5.17",
     "vue-server-renderer": "^2.5.17",
     "waterline": "^0.13.5",
-    "yargs": "^12.0.1"
+    "yargs": "^12.0.2"
   },
   "bin": {
     "compa": "./bin/compa"
