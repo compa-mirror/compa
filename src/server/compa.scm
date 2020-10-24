@@ -30,6 +30,7 @@
 (define (create-server)
   `(display
     (string-append "Server running at http://" ,host ,port))
+
   (lambda (request request-body)
     (values '((content-type . (text/plain)))
             "Compa!")))
