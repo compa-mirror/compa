@@ -24,8 +24,14 @@
 
 (use-modules (web server))
 
-(define (create-server request request-body)
-  (values '((content-type . (text/plain)))
-          "Compa!"))
+(define port 8080)
+(define host "127.0.0.1")
 
-(run-server create-server)
+(define (create-server)
+  `(display
+    (string-append "Server running at http://" ,server-host ,port))
+  (lambda (request request-body)
+    (values '((content-type . (text/plain)))
+            "Compa!")))
+
+(run-server (create-server) 'http `(#:host ,host #:port ,port ))
