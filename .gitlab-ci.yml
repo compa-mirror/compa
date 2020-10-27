@@ -5,7 +5,7 @@ before_script:
         mv apt-cache.tar.gz /apt-cache.tar.gz
         cd / && tar xf apt-cache.tar.gz
       fi
-  - apt-get update -qq && apt-get install -y -qq graphicsmagick wget sudo
+  - apt-get update -qq && apt-get install -y -qq wget gpg xz-utils ntp
   # Guile part
   - |
       if test -f guix-cache.tar.gz; then
