@@ -1,5 +1,24 @@
 before_script:
+  # Extract the APT cached packages, to void download those each time
+  - |
+      if test -f apt-cache.tar.gz; then
+        mv apt-cache.tar.gz /apt-cache.tar.gz
+        cd / && tar xf apt-cache.tar.gz
+      fi
   - apt-get update -qq && apt-get install -y -qq graphicsmagick wget sudo
+  # Guile part
+  - |
+      if test -f guix-cache.tar.gz; then
+        cd / && tar xf guix-cache.tar.gz
+      else
+        wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
+        chmod ugo+x guix-install.sh
+        (echo ""; echo "y") | ./guix-install.sh
+      fi
+  - source /root/.config/guix/current/etc/profile
+  - guix-daemon --build-users-group=guixbuild --disable-chroot &
+  - guix pull
+  # Node/Javascript part
   - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
   - export NVM_DIR="$HOME/.nvm"
   - . "$NVM_DIR/nvm.sh"
@@ -7,60 +26,51 @@ before_script:
   # Allow npm scripts as root
   - echo "unsafe-perm=true" > $HOME/.npmrc
 
+after_script:
+  # Create caches
+  - tar cf apt-cache.tar.gz /var/cache/apt
+  - tar cf guix-cache.tar.xz /var/guix /gnu
+
+cache:
+  # Global cache
+  paths:
+    - guix-cache.tar.xz
+    - apt-cache.tar.gz
+
 stages:
 - test
 - update
 
-test_node4:
+test_node10:
   stage: test
   except:
     - schedules
   script:
-    - nvm install 4
+    - nvm install 10
     - npm install
-    - npm run test
-    - npm run test:install
-    - npm run test:coverage
 
-test_node5:
+test_node12:
   stage: test
   except:
     - schedules
   script:
-    - nvm install 5
+    - nvm install 12
     - npm install
-    - npm run test
-    - npm run test:install
 
-test_node6:
+test_node14:
   stage: test
   except:
     - schedules
   script:
-    - nvm install 6
+    - nvm install 14
     - npm install
-    - npm run test
-    - npm run test:install
 
-test_node7:
+test_guile3:
   stage: test
   except:
     - schedules
   script:
-    - nvm install 7
-    - npm install
-    - npm run test
-    - npm run test:install
-
-test_node8:
-  stage: test
-  except:
-    - schedules
-  script:
-    - nvm install 8
-    - npm install
-    - npm run test
-    - npm run test:install
+    - guix install guile@3.0.4
 
 update_dependencies:
   allow_failure: true
@@ -72,6 +82,6 @@ update_dependencies:
     - ${HOME}/.npm
     - ${HOME}/.nvm
   script:
-    - nvm install 8
+    - nvm install 14
     - npm install -g renovate@latest
     - renovate --platform gitlab --endpoint https://framagit.org/api/v4 --token ${GITLAB_AUTH_TOKEN} --labels=renovate,dependency compa/compa
