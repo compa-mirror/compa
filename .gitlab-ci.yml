@@ -1,4 +1,17 @@
+.before_script_default: &before_script_default
+  # Extract the APT cached packages, to void download those each time
+  - |
+      if test -f apt-cache.tar.gz; then
+        mv apt-cache.tar.gz /apt-cache.tar.gz
+        cd / && tar xf apt-cache.tar.gz
+       fi
+  - apt-get update -qq && apt-get install -y -qq wget gpg xz-utils ntp
+
+.after_script_default: &after_script_default
+  - tar cf apt-cache.tar.gz /var/cache/apt
+
 .before_script_node: &before_script_node
+  - *before_script_default
   - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
   - export NVM_DIR="$HOME/.nvm"
   - . "$NVM_DIR/nvm.sh"
@@ -7,6 +20,7 @@
   - echo "unsafe-perm=true" > $HOME/.npmrc
 
 .before_script_guile: &before_script_guile
+  - *before_script_default
   - |
       if test -f guix-cache.tar.gz; then
         cd / && tar xf guix-cache.tar.gz
@@ -21,26 +35,20 @@
   - guix pull
 
 .after_script_guile: &after_script_guile
+  - *after_script_default
   - tar cf guix-cache.tar.xz /var/guix /gnu
 
 default:
   before_script:
-    # Extract the APT cached packages, to void download those each time
-    - |
-        if test -f apt-cache.tar.gz; then
-          mv apt-cache.tar.gz /apt-cache.tar.gz
-          cd / && tar xf apt-cache.tar.gz
-        fi
-    - apt-get update -qq && apt-get install -y -qq wget gpg xz-utils ntp
-
+    - *before_script_default
   after_script:
-    - tar cf apt-cache.tar.gz /var/cache/apt
+    - *after_script_default
 
-cache:
-  # Global cache
-  paths:
-    - guix-cache.tar.xz
-    - apt-cache.tar.gz
+  cache:
+    # Global cache
+    paths:
+      - guix-cache.tar.xz
+      - apt-cache.tar.gz
 
 stages:
 - test
@@ -50,6 +58,8 @@ test_node10:
   stage: test
   except:
     - schedules
+  before_script:
+    - *before_script_node
   script:
     - nvm install 10
     - npm install
