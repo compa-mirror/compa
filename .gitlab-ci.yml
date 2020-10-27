@@ -33,7 +33,6 @@
   - guix pull
 
 .after_script_guile: &after_script_guile
-  - *after_script_default
   - tar cf guix-cache.tar.xz /var/guix /gnu
 
 .job_node_definition: &job_node_definition
@@ -47,6 +46,7 @@
     - *before_script_guile
 
   after_script:
+    - *after_script_default
     - *after_script_guile
 
 default:
