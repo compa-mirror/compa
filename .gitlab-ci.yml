@@ -30,9 +30,10 @@
       fi
   - source /root/.config/guix/current/etc/profile
   - guix-daemon --build-users-group=guixbuild --disable-chroot &
-  - guix pull
+  #- guix pull
 
 .after_script_guile: &after_script_guile
+  #- cp $(guix pack -C gzip guile -S /opt/bin=bin) guix-cache.tar.xz
   - tar cf guix-cache.tar.xz /var/guix /gnu
 
 .job_node_definition: &job_node_definition
