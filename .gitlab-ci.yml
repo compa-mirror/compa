@@ -11,7 +11,6 @@
   - tar cf apt-cache.tar.gz /var/cache/apt
 
 .before_script_node: &before_script_node
-  - *before_script_default
   - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
   - export NVM_DIR="$HOME/.nvm"
   - . "$NVM_DIR/nvm.sh"
@@ -20,7 +19,6 @@
   - echo "unsafe-perm=true" > $HOME/.npmrc
 
 .before_script_guile: &before_script_guile
-  - *before_script_default
   - |
       if test -f guix-cache.tar.gz; then
         cd / && tar xf guix-cache.tar.gz
@@ -37,6 +35,19 @@
 .after_script_guile: &after_script_guile
   - *after_script_default
   - tar cf guix-cache.tar.xz /var/guix /gnu
+
+.job_node_definition: &job_node_definition
+  before_script:
+    - *before_script_default
+    - *before_script_node
+
+.job_guile_definition: &job_guile_definition
+  before_script:
+    - *before_script_default
+    - *before_script_guile
+
+  after_script:
+    - *after_script_guile
 
 default:
   before_script:
@@ -55,43 +66,37 @@ stages:
 - update
 
 test_node10:
+  <<: *job_node_definition
   stage: test
   except:
     - schedules
-  before_script:
-    - *before_script_node
   script:
     - nvm install 10
     - npm install
 
 test_node12:
+  <<: *job_node_definition
   stage: test
   except:
     - schedules
-  before_script:
-    - *before_script_node
   script:
     - nvm install 12
     - npm install
 
 test_node14:
+  <<: *job_node_definition
   stage: test
   except:
     - schedules
-  before_script:
-    - *before_script_node
   script:
     - nvm install 14
     - npm install
 
 test_guile3:
+  <<: *job_guile_definition
   stage: test
   except:
     - schedules
-  before_script:
-    - *before_script_guile
-  after_script:
-    - *after_script_guile
   script:
     - guix install guile@3.0.4
 
