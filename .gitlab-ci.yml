@@ -1,4 +1,4 @@
-before_script_node: &before_script_node
+.before_script_node: &before_script_node
   - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash
   - export NVM_DIR="$HOME/.nvm"
   - . "$NVM_DIR/nvm.sh"
@@ -6,7 +6,7 @@ before_script_node: &before_script_node
   # Allow npm scripts as root
   - echo "unsafe-perm=true" > $HOME/.npmrc
 
-before_script_guile: &before_script_guile
+.before_script_guile: &before_script_guile
   - |
       if test -f guix-cache.tar.gz; then
         cd / && tar xf guix-cache.tar.gz
@@ -20,7 +20,7 @@ before_script_guile: &before_script_guile
   - guix-daemon --build-users-group=guixbuild --disable-chroot &
   - guix pull
 
-after_script_guile: &after_script_guile
+.after_script_guile: &after_script_guile
   - tar cf guix-cache.tar.xz /var/guix /gnu
 
 default:
