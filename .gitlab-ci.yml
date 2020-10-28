@@ -99,7 +99,7 @@ test_guile3:
   except:
     - schedules
   script:
-    - guix install guile@3.0.4
+    - guix install guile@3 || guix upgrade guile
 
 update_dependencies:
   allow_failure: true
