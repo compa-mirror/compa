@@ -1,3 +1,6 @@
+variables:
+  GUIX_VERSION: 1.1.0
+
 .before_script_default: &before_script_default
   # Extract the APT cached packages, to void download those each time
   - |
@@ -20,20 +23,27 @@
   - echo "unsafe-perm=true" > $HOME/.npmrc
 
 .before_script_guile: &before_script_guile
-  - wget https://sv.gnu.org/people/viewgpg.php?user_id=15145 -qO - | gpg --import -
-  - wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
-  - chmod ugo+x guix-install.sh
-  - (echo ""; echo "y") | ./guix-install.sh
   - |
       if test -f guixx-cache.tar.gz; then
         mv guix-cache.tar.gz /guix-cache.tar.gz
         cd / && tar xf guix-cache.tar.gz
-        cd $CI_PROJECT_DIR
+      else
+        wget https://sv.gnu.org/people/viewgpg.php?user_id=15145 -qO - | gpg --import -
+        wget -O guix-binary.x86_64-linux.tar.xz https://ftp.gnu.org/gnu/guix/guix-binary-$GUIX_VERSION.x86_64-linux.tar.xz
+        cd / && tar --warning=no-timestamp -xf guix-binary.x86_64-linux.tar.xz
+        mkdir -p $HOME/.config/guix
+        ln -sf /var/guix/profiles/per-user/root/current-guix /root/.config/guix/current
       fi
-  - source /root/.config/guix/current/etc/profile
+  - groupadd --system guixbuild
+  - for i in $(seq 1 10) ; do useradd -g guixbuild -G guixbuild -d /var/empty -s $(which nologin) -c "Guix build user $i" --system guixbuilder$i ; done
+  - cd $CI_PROJECT_DIR
+  - export GUIX_PROFILE="$HOME/.config/guix/current"
+  - source $GUIX_PROFILE/etc/profile
+  - ln -s /var/guix/profiles/per-user/root/current-guix/bin/guix /usr/local/bin/guix
+  - guix archive --authorize < $GUIX_PROFILE/share/guix/ci.guix.gnu.org.pub
   - guix-daemon --build-users-group=guixbuild --disable-chroot &
-  - guix pull --branch=master
-  #- guix package -u
+  - guix pull
+  - guix package -u
 
 .after_script_guile: &after_script_guile
   #- cp $(guix pack -C gzip guile -S /opt/bin=bin) guix-cache.tar.xz
@@ -106,9 +116,7 @@ test_guile3:
   except:
     - schedules
   script:
-    - guix package -u guile
     - guix install guile@3 || guix install guile
-    - guix package -u guile
 
 update_dependencies:
   allow_failure: true
