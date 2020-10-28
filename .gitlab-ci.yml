@@ -21,7 +21,7 @@
 
 .before_script_guile: &before_script_guile
   - |
-      if test -f guix-cache.tar.gz; then
+      if test -f guixx-cache.tar.gz; then
         mv guix-cache.tar.gz /guix-cache.tar.gz
         cd / && tar xf guix-cache.tar.gz
         cd $CI_PROJECT_DIR
@@ -38,7 +38,7 @@
 
 .after_script_guile: &after_script_guile
   #- cp $(guix pack -C gzip guile -S /opt/bin=bin) guix-cache.tar.xz
-  - tar cf guix-cache.tar.gz /var/guix /gnu
+  - tar cf guix-cache.tar.gz /root/.config/guix /var/guix /gnu
 
 .job_node_definition: &job_node_definition
   before_script:
