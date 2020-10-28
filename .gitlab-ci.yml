@@ -30,7 +30,7 @@
       fi
   - source /root/.config/guix/current/etc/profile
   - guix-daemon --build-users-group=guixbuild --disable-chroot &
-  #- guix pull
+  - guix pull
 
 .after_script_guile: &after_script_guile
   #- cp $(guix pack -C gzip guile -S /opt/bin=bin) guix-cache.tar.xz
@@ -57,7 +57,10 @@ default:
     - *after_script_default
 
   cache:
-    # Global cache
+  key:
+    files:
+      - guix.scm
+      - package.json
     paths:
       - guix-cache.tar.xz
       - apt-cache.tar.gz
