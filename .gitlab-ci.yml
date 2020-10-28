@@ -44,7 +44,7 @@ variables:
   - guix archive --authorize < $GUIX_PROFILE/share/guix/ci.guix.gnu.org.pub
   - guix-daemon --build-users-group=guixbuild --disable-chroot &
   - guix pull
-  - guix package -u
+  - guix package -u guix guile
 
 .after_script_guile: &after_script_guile
   #- cp $(guix pack -C gzip guile -S /opt/bin=bin) guix-cache.tar.xz
