@@ -2,14 +2,9 @@
   # Extract the APT cached packages, to void download those each time
   - |
       if test -f apt-cache.tar.gz; then
-        echo $PWD
-        echo $(pwd)
-        echo $CI_BUILDS_DIR
-        echo $CI_PROJECT_DIR
-        echo $CI_PROJECT_PATH
-        echo $HOME
         mv apt-cache.tar.gz /apt-cache.tar.gz
         cd / && tar xf apt-cache.tar.gz
+        cd $CI_PROJECT_PATH
        fi
   - apt-get update -qq && apt-get install -y -qq wget gpg xz-utils ntp
 
@@ -28,6 +23,7 @@
   - |
       if test -f guix-cache.tar.gz; then
         cd / && tar xf guix-cache.tar.gz
+        cd $CI_PROJECT_PATH
       else
         wget https://sv.gnu.org/people/viewgpg.php?user_id=15145 -qO - | gpg --import -
         wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
@@ -40,7 +36,7 @@
 
 .after_script_guile: &after_script_guile
   #- cp $(guix pack -C gzip guile -S /opt/bin=bin) guix-cache.tar.xz
-  - tar cf guix-cache.tar.xz /var/guix /gnu
+  - tar cf guix-cache.tar.gz /var/guix /gnu
 
 .job_node_definition: &job_node_definition
   before_script:
@@ -68,7 +64,7 @@ default:
         - guix.scm
         - package.json
     paths:
-      - guix-cache.tar.xz
+      - guix-cache.tar.gz
       - apt-cache.tar.gz
 
 stages:
