@@ -3,7 +3,7 @@
   - |
       if test -f apt-cache.tar.gz; then
         echo $PWD
-        echo pwd
+        echo $(pwd)
         echo $CI_BUILDS_DIR
         echo $CI_PROJECT_DIR
         echo $CI_PROJECT_PATH
@@ -81,7 +81,7 @@ test_node10:
   except:
     - schedules
   script:
-    - echo pwd
+    - echo $(pwd)
     - nvm install 10
     - npm install
 
