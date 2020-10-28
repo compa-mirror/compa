@@ -57,10 +57,10 @@ default:
     - *after_script_default
 
   cache:
-  key:
-    files:
-      - guix.scm
-      - package.json
+    key:
+      files:
+        - guix.scm
+        - package.json
     paths:
       - guix-cache.tar.xz
       - apt-cache.tar.gz
