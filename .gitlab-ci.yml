@@ -20,16 +20,16 @@
   - echo "unsafe-perm=true" > $HOME/.npmrc
 
 .before_script_guile: &before_script_guile
-  - |
-      if test -f guix-cache.tar.gz; then
-        mv guix-cache.tar.gz /guix-cache.tar.gz
-        cd / && tar xf guix-cache.tar.gz
-        cd $CI_PROJECT_DIR
-      fi
   - wget https://sv.gnu.org/people/viewgpg.php?user_id=15145 -qO - | gpg --import -
   - wget https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
   - chmod ugo+x guix-install.sh
   - (echo ""; echo "y") | ./guix-install.sh
+  - |
+      if test -f guixx-cache.tar.gz; then
+        mv guix-cache.tar.gz /guix-cache.tar.gz
+        cd / && tar xf guix-cache.tar.gz
+        cd $CI_PROJECT_DIR
+      fi
   - source /root/.config/guix/current/etc/profile
   - guix-daemon --build-users-group=guixbuild --disable-chroot &
   - guix pull --branch=master
@@ -37,7 +37,7 @@
 
 .after_script_guile: &after_script_guile
   #- cp $(guix pack -C gzip guile -S /opt/bin=bin) guix-cache.tar.xz
-  - tar cf guix-cache.tar.gz /root/.config/guix /var/guix /gnu
+  - tar cf guix-cache.tar.gz /root/.guix-profile /root/.config/guix /var/guix /gnu
 
 .job_node_definition: &job_node_definition
   before_script:
