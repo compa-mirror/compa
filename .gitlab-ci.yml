@@ -75,6 +75,7 @@ default:
       files:
         - guix.scm
         - package.json
+      prefix: ${GUIX_VERSION}
     paths:
       - guix-cache.tar.gz
       - apt-cache.tar.gz
