@@ -21,7 +21,7 @@
 
 .before_script_guile: &before_script_guile
   - |
-      if test -f guixx-cache.tar.gz; then
+      if test -f guix-cache.tar.gz; then
         mv guix-cache.tar.gz /guix-cache.tar.gz
         cd / && tar xf guix-cache.tar.gz
         cd $CI_PROJECT_DIR
@@ -107,7 +107,9 @@ test_guile3:
   except:
     - schedules
   script:
+    - guix package -u guile
     - guix install guile@3 || guix install guile
+    - guix package -u guile
 
 update_dependencies:
   allow_failure: true
