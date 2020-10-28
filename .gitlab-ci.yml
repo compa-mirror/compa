@@ -24,7 +24,7 @@ variables:
 
 .before_script_guile: &before_script_guile
   - |
-      if test -f guixx-cache.tar.gz; then
+      if test -f guix-cache.tar.gz; then
         mv guix-cache.tar.gz / && cd /
         tar xf guix-cache.tar.gz
       else
@@ -117,7 +117,7 @@ test_guile3:
   except:
     - schedules
   script:
-    - guix install guile@3 || guix install guile
+    - guix install guile@3
 
 update_dependencies:
   allow_failure: true
