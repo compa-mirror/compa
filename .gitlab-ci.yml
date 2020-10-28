@@ -25,12 +25,13 @@ variables:
 .before_script_guile: &before_script_guile
   - |
       if test -f guixx-cache.tar.gz; then
-        mv guix-cache.tar.gz /guix-cache.tar.gz
-        cd / && tar xf guix-cache.tar.gz
+        mv guix-cache.tar.gz / && cd /
+        tar xf guix-cache.tar.gz
       else
         wget https://sv.gnu.org/people/viewgpg.php?user_id=15145 -qO - | gpg --import -
         wget -O guix-binary.x86_64-linux.tar.xz https://ftp.gnu.org/gnu/guix/guix-binary-$GUIX_VERSION.x86_64-linux.tar.xz
-        cd / && tar --warning=no-timestamp -xf guix-binary.x86_64-linux.tar.xz
+        mv guix-binary.x86_64-linux.tar.xz / && cd /
+        tar --warning=no-timestamp -xf guix-binary.x86_64-linux.tar.xz
         mkdir -p $HOME/.config/guix
         ln -sf /var/guix/profiles/per-user/root/current-guix /root/.config/guix/current
       fi
