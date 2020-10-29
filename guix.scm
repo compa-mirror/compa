@@ -22,16 +22,22 @@
 ;;
 ;;   guix package -f guix.scm
 ;;
+;; To build it, but not install it, run:
+;;
+;;   guix build -f guix.scm
+;;
 ;; To use as the basis for a development environment, run:
 ;;
 ;;   guix environment -l guix.scm
 ;;
 ;;; Code:
 
-use-modules (guix packages)
+(use-modules (guix packages)
              (guix licenses)
              (guix git-download)
              (guix build-system gnu)
+             (guix gexp)
+             (guix utils)
              (gnu packages)
              (gnu packages autotools)
              (gnu packages guile)
@@ -39,17 +45,12 @@ use-modules (guix packages)
              (gnu packages pkg-config)
              (gnu packages texinfo))
 
+(define *srcdir* (canonicalize-path (current-source-directory)))
+
 (package
   (name "compa")
   (version "0.1")
-  (source (origin
-            (method git-fetch)
-            (uri (git-reference
-                  (url "git@framagit.org:compa/compa.git")
-                  (commit "no yet")))
-            (sha256
-             (base32
-              "no yet"))))
+  (source (local-file *srcdir* #:recursive? #t #:select? (git-predicate *srcdir*)))
   (build-system gnu-build-system)
   (arguments
    '(#:phases
@@ -62,7 +63,7 @@ use-modules (guix packages)
      ("pkg-config" ,pkg-config)
      ("texinfo" ,texinfo)))
   (inputs
-   `(("guile" ,guile-3.0.4)))
+   `(("guile" ,guile-3.0)))
   (propagated-inputs
    `(("guile-commonmark" ,guile-commonmark)))
   (synopsis "Worldwide social directory decentralized and federated")
