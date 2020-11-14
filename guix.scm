@@ -32,18 +32,18 @@
 ;;
 ;;; Code:
 
-(use-modules (guix packages)
-             (guix licenses)
-             (guix git-download)
-             (guix build-system gnu)
-             (guix gexp)
-             (guix utils)
-             (gnu packages)
-             (gnu packages autotools)
-             (gnu packages guile)
-             (gnu packages guile-xyz)
-             (gnu packages pkg-config)
-             (gnu packages texinfo))
+(use-modules
+  (guix packages)
+  ((guix licenses) #:prefix license:)
+  (guix download)
+  (guix git-download)
+  (guix build-system gnu)
+  (gnu packages)
+  (gnu packages autotools)
+  (gnu packages guile)
+  (gnu packages guile-xyz)
+  (gnu packages pkg-config)
+  (gnu packages texinfo))
 
 (define *srcdir* (canonicalize-path (current-source-directory)))
 
@@ -52,21 +52,16 @@
   (version "0.1")
   (source (local-file *srcdir* #:recursive? #t #:select? (git-predicate *srcdir*)))
   (build-system gnu-build-system)
-  (arguments
-   '(#:phases
-     (modify-phases %standard-phases
-       (add-after 'unpack 'bootstrap
-         (lambda _ (zero? (system* "sh" "bootstrap")))))))
+  (arguments `())
   (native-inputs
-   `(("autoconf" ,autoconf)
-     ("automake" ,automake)
-     ("pkg-config" ,pkg-config)
-     ("texinfo" ,texinfo)))
-  (inputs
-   `(("guile" ,guile-3.0)))
+    `(("autoconf" ,autoconf)
+      ("automake" ,automake)
+      ("pkg-config" ,pkg-config)
+      ("texinfo" ,texinfo)))
+  (inputs `(("guile" ,guile-3.0)))
   (propagated-inputs
    `(("guile-commonmark" ,guile-commonmark)))
   (synopsis "Worldwide social directory decentralized and federated")
   (description "Compa is a free (as freedom) world wide social directory decentralized and federated with an ActivityPub API.")
   (home-page "http://joincompa.org/")
-  (license agpl3+))
+  (license license:agpl3+))

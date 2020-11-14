@@ -10,13 +10,13 @@ There's always work to be done on the **Compa** codebase. Here are the basic rul
 * Make sure the linter (`npm run lint`) passes
 * Make sure all tests (`npm test`) passes
 * Send patches via Pull Request from your branch to `develop`
-* See [HACKING.md][] for more guidelines
+* See [HACKING][] for more guidelines
 
 Need a more detailed explanation, or aren't sure how to start? See [CONTRIBUTING_CODE.md][].
 
 ## Design
 
-Other way to contribute is with design, you can make contribution for better UI/UX in webapp, 
+Other way to contribute is with design, you can make contribution for better UI/UX in webapp,
 or with design for promotional material etc, please feel free to propose, only  some basic things:
 
 * All design pieces need release over [Creative Commons License By-SA][creativecommons]
@@ -42,13 +42,13 @@ If it's a bug in the API, include details about what you're submitting or the ex
 
 ## This project is Free Software
 
-**Compa** is [Free Software][freesoftware] and your code contributions will be released under the **GNU AGPL 3.0 License**, 
+**Compa** is [Free Software][freesoftware] and your code contributions will be released under the **GNU AGPL 3.0 License**,
 See the [COPYING][LICENSE] file for the full license text.
 
-[![GNU AGPLv3 Image](https://www.gnu.org/graphics/agplv3-88x31.png)](https://www.gnu.org/licenses/agpl-3.0.html) 
+[![GNU AGPLv3 Image](https://www.gnu.org/graphics/agplv3-88x31.png)](https://www.gnu.org/licenses/agpl-3.0.html)
 
  [commits]: https://chris.beams.io/posts/git-commit/
- [HACKING]: https://framagit.org/compa/compa/tree/master/doc/HACKING.md
+ [HACKING]: https://framagit.org/compa/compa/tree/master/HACKING
  [LICENSE]: https://framagit.org/compa/compa/tree/master/COPYING
  [CONTRIBUTING_CODE.md]: https://framagit.org/compa/compa/tree/master/doc/CONTRIBUTING_CODE.md
  [creativecommons]: https://creativecommons.org/choose/
